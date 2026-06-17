@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p extracted)",
+      "Bash(unzip -o \"Cepa P-handoff.zip\" -d extracted/)",
+      "Bash(npm --version)",
+      "Bash(npx --version)"
+    ]
+  }
+}

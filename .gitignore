@@ -1,0 +1,15 @@
+# Next.js
+Plataforam/.next/
+Plataforam/node_modules/
+Plataforam/.env.local
+
+# Claude settings
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
