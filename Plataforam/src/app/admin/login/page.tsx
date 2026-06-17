@@ -147,7 +147,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div style={{ textAlign:'center', marginTop:18 }}>
-            <a href="http://localhost:5000" style={{
+            <a href="/index.html" style={{
               display:'inline-flex', alignItems:'center', gap:6,
               color:'#3a4a63', fontSize:12, textDecoration:'none', transition:'color .15s',
             }}

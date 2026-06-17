@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contacto · CEPA Compañía de María Apoquindo</title>
+<meta name="description" content="Contáctanos. Escríbenos por email, teléfono, o completa nuestro formulario de contacto. Centro de Padres y Apoderados del Colegio Compañía de María Apoquindo." />
+<link rel="canonical" href="https://www.cepaciamaria.cl/contacto.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#1B2A4A" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="apple-touch-icon" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/cepa.css" />
+<link rel="stylesheet" href="assets/chatbot.css" />
+
+<style>
+/* ---- Contact Hero ---- */
+.contact-hero {
+  background: linear-gradient(165deg, #22355c 0%, #1B2A4A 52%, #131e36 100%);
+  color: #fff;
+  padding: clamp(3rem,7vw,5.5rem) 0 clamp(2rem,5vw,3.5rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.contact-hero__pat {
+  position: absolute; inset: 0; opacity: .4; pointer-events: none;
+  background-image: radial-gradient(circle at center, rgba(201,162,39,.16) 1.4px, transparent 1.6px);
+  background-size: 26px 26px;
+}
+.contact-hero h1 { color: #fff; font-size: clamp(2rem,5vw,3rem); margin-bottom: .5rem; position: relative; }
+.contact-hero p { color: #c9d4e8; font-size: 1.08rem; max-width: 54ch; margin: 0 auto; position: relative; }
+
+/* ---- Two-column layout ---- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: clamp(1.5rem,4vw,3rem);
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Info card ---- */
+.contact-info {
+  background: #fff;
+  border: 1px solid #e3e6ec;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(27,42,74,.08);
+  padding: clamp(1.4rem,3vw,2rem);
+}
+.contact-info h2 { font-size: 1.3rem; margin-bottom: 1.2rem; }
+.contact-item {
+  display: flex; align-items: flex-start; gap: 12px; margin-bottom: 1.2rem;
+}
+.contact-item-icon {
+  width: 40px; height: 40px; border-radius: 10px; background: #E8EDF5;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  flex-shrink: 0; margin-top: 2px;
+}
+.contact-item-body strong { display: block; font-size: .85rem; text-transform: uppercase; letter-spacing: .07em; color: #94a3b8; font-weight: 600; margin-bottom: 2px; }
+.contact-item-body a, .contact-item-body span { color: #1B2A4A; font-weight: 500; font-size: .97rem; }
+.contact-item-body a:hover { color: #185FA5; text-decoration: underline; }
+
+.contact-bank {
+  background: #f7f8fb; border: 1px solid #e3e6ec; border-radius: 12px;
+  padding: 1.1rem 1.3rem; margin-top: 1.2rem;
+}
+.contact-bank h4 { font-size: .9rem; margin-bottom: .7rem; color: #1B2A4A; }
+.contact-bank dl { display: grid; grid-template-columns: auto 1fr; gap: .3rem .7rem; margin: 0; font-size: .88rem; }
+.contact-bank dt { color: #5b6472; font-weight: 600; }
+.contact-bank dd { margin: 0; color: #1B2A4A; font-weight: 500; }
+
+/* ---- Form card ---- */
+.contact-form-card {
+  background: #fff;
+  border: 1px solid #e3e6ec;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(27,42,74,.08);
+  padding: clamp(1.4rem,3vw,2rem);
+}
+.contact-form-card h2 { font-size: 1.3rem; margin-bottom: 1.4rem; }
+
+.form-row { margin-bottom: 1.1rem; }
+.form-row label {
+  display: block; font-size: .88rem; font-weight: 600; color: #1B2A4A;
+  margin-bottom: .4rem;
+}
+.form-row label .req { color: #e53935; margin-left: 2px; }
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid #e3e6ec; border-radius: 10px;
+  font-size: .97rem; font-family: "Inter", system-ui, sans-serif;
+  color: #1c1f26; background: #fff;
+  outline: none; transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none; appearance: none;
+}
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border-color: #185FA5;
+  box-shadow: 0 0 0 3px rgba(24,95,165,.12);
+}
+.form-row textarea { resize: vertical; min-height: 110px; }
+.form-row select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6472' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+  padding-right: 36px;
+}
+
+.form-error {
+  color: #b3261e; font-size: .82rem; margin-top: .3rem; display: none;
+}
+.form-row.has-error input,
+.form-row.has-error select,
+.form-row.has-error textarea { border-color: #b3261e; }
+.form-row.has-error .form-error { display: block; }
+
+.captcha-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
+.captcha-label {
+  background: #E8EDF5; border-radius: 8px; padding: 9px 14px;
+  font-size: .97rem; font-weight: 600; color: #1B2A4A; white-space: nowrap;
+}
+.captcha-row input { margin: 0; }
+
+.btn--submit {
+  background: #1E7A52; color: #fff; width: 100%;
+  padding: 13px; border-radius: 10px; font-size: 1rem; font-weight: 600;
+  border: none; cursor: pointer; transition: background .15s, transform .1s;
+  font-family: "Inter", system-ui, sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn--submit:hover { background: #166041; transform: translateY(-1px); }
+.btn--submit:active { transform: translateY(0); }
+.btn--submit:focus-visible { outline: 3px solid #C9A227; outline-offset: 2px; }
+
+/* ---- Success message ---- */
+.contact-success {
+  text-align: center; padding: 2rem;
+  display: none;
+}
+.contact-success .success-icon {
+  width: 64px; height: 64px; border-radius: 50%; background: #e3f1ea;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin: 0 auto 1rem;
+}
+.contact-success h3 { color: #1E7A52; margin-bottom: .5rem; }
+.contact-success p { color: #5b6472; margin-bottom: 1.2rem; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Saltar al contenido</a>
+
+<!-- ============ NAVBAR ============ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="brand" aria-label="Inicio — CEPA Compañía de María">
+      <span class="brand__crest"><img src="assets/logo.png" width="46" height="46" decoding="async" alt="Escudo Compañía de María Apoquindo — Centro de Padres" /></span>
+      <span class="brand__txt">
+        <span class="brand__name">CEPA</span>
+        <span class="brand__sub">Compañía de María Apoquindo</span>
+      </span>
+    </a>
+
+    <nav class="nav__menu" aria-label="Principal">
+      <a href="noticias.html" class="nav__link">Noticias</a>
+      <a href="contacto.html" class="nav__link">Contacto</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="/portal/login" class="nav__pay">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Pagar cuota
+      </a>
+      <button class="nav__burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span class="nav__burger-txt">Menú</span>
+      </button>
+    </div>
+    <a href="/admin/login" class="nav__login" title="Administración CEPA">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <span class="nav__login-txt">Admin</span>
+    </a>
+    </div>
+  </div>
+</header>
+
+<!-- Overlay -->
+<div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+
+<!-- Panel lateral completo -->
+<nav class="drawer" id="drawer" aria-label="Menú completo" role="dialog" aria-modal="true">
+  <div class="drawer__head">
+    <a href="index.html" class="brand drawer__brand" aria-label="Inicio">
+      <span class="brand__crest"><img src="assets/logo.png" width="36" height="36" decoding="async" alt="CEPA" /></span>
+      <span class="brand__txt">
+        <span class="brand__name" style="color:var(--color-primary)">CEPA</span>
+        <span class="brand__sub" style="color:var(--color-muted)">Compañía de María Apoquindo</span>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawer-close" aria-label="Cerrar menú">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer__body">
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Institución</p>
+      <a href="index.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        El CEPA — Quiénes somos
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6M3 15h6"/></svg>
+        Directorio
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Misión y valores
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Cuotas y Becas</p>
+      <a href="cuota-cepa.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Cuota Centro de Padres 2026
+      </a>
+      <a href="becas-solidarias.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Becas Solidarias
+      </a>
+      <a href="cuota-cepa.html#fallecimiento" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Fondo por Fallecimiento
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Actividades y Comunidad</p>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Eventos del CEPA
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20M2 12h20M12 2c2.5 2.5 4 6 4 10s-1.5 7.5-4 10M12 2C9.5 4.5 8 8 8 12s1.5 7.5 4 10"/></svg>
+        Deportes CEPA
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+        Cristo en la Calle
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        Pastoral Familiar
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Servicios y Convenios</p>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Convenios vigentes
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Transporte Escolar
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        Economía Circular
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Información</p>
+      <a href="noticias.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a4 4 0 01-4-4V6"/><path d="M2 13.5h4"/><path d="M2 8.5h4"/></svg>
+        Noticias y actividades
+      </a>
+      <a href="faq.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Preguntas frecuentes
+      </a>
+      <a href="contacto.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Contacto
+      </a>
+      <a href="http://localhost:3001/admin" class="drawer__item drawer__item--admin">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Panel Administración
+      </a>
+    </div>
+
+  </div>
+
+  <div class="drawer__foot">
+    <a href="/portal/login" class="drawer__pay">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Pagar cuota 2026
+    </a>
+  </div>
+</nav>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="contact-hero">
+    <div class="contact-hero__pat"></div>
+    <div class="container" style="position:relative;">
+      <p class="eyebrow" style="color:#f0d98c;justify-content:center;">Centro de Padres · CEPA</p>
+      <h1>Contáctanos</h1>
+      <p>Estamos aquí para ayudarte. Escríbenos o llámanos — responderemos a la brevedad.</p>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- Left: Info -->
+        <div class="contact-info">
+          <h2>Información de contacto</h2>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">📧</div>
+            <div class="contact-item-body">
+              <strong>Email</strong>
+              <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">📞</div>
+            <div class="contact-item-body">
+              <strong>Teléfono</strong>
+              <a href="tel:+56222116166">+56 22 211 6166</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">📍</div>
+            <div class="contact-item-body">
+              <strong>Dirección</strong>
+              <span>Manquehue Sur 116, Las Condes, Santiago</span>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-item-icon">📱</div>
+            <div class="contact-item-body">
+              <strong>Instagram</strong>
+              <a href="https://instagram.com/cepacma" target="_blank" rel="noopener">@cepacma</a>
+            </div>
+          </div>
+
+          <!-- Bank transfer card -->
+          <div class="contact-bank">
+            <h4>Datos para transferencia bancaria</h4>
+            <dl>
+              <dt>Banco:</dt>
+              <dd>Santander</dd>
+              <dt>Tipo:</dt>
+              <dd>Cuenta Corriente</dd>
+              <dt>N° cuenta:</dt>
+              <dd>03-99008-7</dd>
+              <dt>RUT:</dt>
+              <dd>70.698.300-7</dd>
+              <dt>Email comprobante:</dt>
+              <dd>cepa@cepaciamaria.cl</dd>
+            </dl>
+          </div>
+
+          <div style="margin-top:1.4rem;">
+            <a href="faq.html" style="color:#185FA5;font-size:.9rem;font-weight:600;display:inline-flex;align-items:center;gap:.4rem;">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+              Ver preguntas frecuentes
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="contact-form-card">
+          <h2>Envíanos un mensaje</h2>
+
+          <!-- Wire up to FormSubmit.co or Netlify Forms for production -->
+          <form id="contacto-form" novalidate autocomplete="on">
+
+            <div class="form-row" id="row-nombre">
+              <label for="f-nombre">Nombre completo <span class="req">*</span></label>
+              <input type="text" id="f-nombre" name="nombre" required autocomplete="name" placeholder="Ej: María González" />
+              <p class="form-error" id="err-nombre">Por favor ingresa tu nombre completo.</p>
+            </div>
+
+            <div class="form-row" id="row-email">
+              <label for="f-email">Correo electrónico <span class="req">*</span></label>
+              <input type="email" id="f-email" name="email" required autocomplete="email" placeholder="tu@email.com" />
+              <p class="form-error" id="err-email">Por favor ingresa un email válido.</p>
+            </div>
+
+            <div class="form-row" id="row-telefono">
+              <label for="f-telefono">Teléfono <span style="font-weight:400;color:#94a3b8;">(opcional)</span></label>
+              <input type="tel" id="f-telefono" name="telefono" autocomplete="tel" placeholder="+56 9 1234 5678" />
+            </div>
+
+            <div class="form-row" id="row-asunto">
+              <label for="f-asunto">Asunto <span class="req">*</span></label>
+              <select id="f-asunto" name="asunto" required>
+                <option value="">— Selecciona un asunto —</option>
+                <option value="Consulta general">Consulta general</option>
+                <option value="Cuotas y pagos">Cuotas y pagos</option>
+                <option value="Becas y Acción Social">Becas y Acción Social</option>
+                <option value="Deportes CEPA">Deportes CEPA</option>
+                <option value="Convenios">Convenios</option>
+                <option value="Eventos">Eventos</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <p class="form-error" id="err-asunto">Por favor selecciona un asunto.</p>
+            </div>
+
+            <div class="form-row" id="row-mensaje">
+              <label for="f-mensaje">Mensaje <span class="req">*</span></label>
+              <textarea id="f-mensaje" name="mensaje" required minlength="20" placeholder="Escribe tu consulta aquí (mínimo 20 caracteres)…"></textarea>
+              <p class="form-error" id="err-mensaje">El mensaje debe tener al menos 20 caracteres.</p>
+            </div>
+
+            <div class="form-row" id="row-captcha">
+              <label for="f-captcha">Verificación: ¿Cuánto es 3 + 4? <span class="req">*</span></label>
+              <div class="captcha-row">
+                <span class="captcha-label">3 + 4 =</span>
+                <input type="number" id="f-captcha" name="captcha" required placeholder="Tu respuesta" min="0" max="99" />
+              </div>
+              <p class="form-error" id="err-captcha">Respuesta incorrecta. La suma es 7.</p>
+            </div>
+
+            <div style="margin-top:1.4rem;">
+              <button type="submit" class="btn--submit">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                Enviar mensaje
+              </button>
+            </div>
+          </form>
+
+          <!-- Success state -->
+          <div class="contact-success" id="contact-success">
+            <div class="success-icon">✅</div>
+            <h3>¡Mensaje enviado!</h3>
+            <p>Gracias, <strong id="success-name"></strong>. Te responderemos a <strong id="success-email"></strong> a la brevedad.</p>
+            <a href="index.html" class="btn btn--primary" style="display:inline-flex;">Volver al inicio</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="brand" style="margin-bottom:.4rem;">
+          <span class="brand__crest"><img src="assets/logo.png" width="46" height="46" loading="lazy" decoding="async" alt="Escudo Compañía de María Apoquindo — Centro de Padres" /></span>
+          <span class="brand__txt"><span class="brand__name">CEPA</span><span class="brand__sub">Compañía de María Apoquindo</span></span>
+        </div>
+        <p class="footer__lema">Juntos Somos Comunidad</p>
+        <p style="font-size:.88rem; color:#94a3c2; margin:0;">Centro de Padres y Apoderados · Congregación de Santa Juana de Lestonnac.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="#">Quiénes somos</a></li>
+          <li><a href="cuota-cepa.html">Cuotas y Becas</a></li>
+          <li><a href="#">Actividades</a></li>
+          <li><a href="#">Servicios</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="faq.html">Preguntas frecuentes</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a></li>
+          <li><a href="tel:+56222116166">+56 22 211 6166</a></li>
+          <li>Manquehue Sur 116, Las Condes</li>
+          <li><a href="#">Acceso apoderados →</a></li>
+        </ul>
+        <div class="footer__social" style="margin-top:1rem;">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V7a2 2 0 012-2h2V2h-3a4 4 0 00-4 4v3H8v3h3v8h3v-8h3l1-3z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Datos de transferencia</h4>
+        <div class="footer__bank">
+          <div><dt>Banco:</dt> Santander</div>
+          <div><dt>Cuenta:</dt> Cta. Cte. 03-99008-7</div>
+          <div><dt>RUT:</dt> 70.698.300-7</div>
+          <div><dt>Email comprobante:</dt> cepa@cepaciamaria.cl</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> Centro de Padres y Apoderados · Colegio Compañía de María Apoquindo. Todos los derechos reservados.</span>
+      <span>Hecho con cariño por y para la comunidad.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/cepa.js"></script>
+<script src="assets/chatbot.js" defer></script>
+
+<script>
+(function () {
+  var form = document.getElementById('contacto-form');
+  var successEl = document.getElementById('contact-success');
+  var successName = document.getElementById('success-name');
+  var successEmail = document.getElementById('success-email');
+
+  function setError(rowId, errId, show) {
+    var row = document.getElementById(rowId);
+    var err = document.getElementById(errId);
+    if (show) {
+      row.classList.add('has-error');
+      err.style.display = 'block';
+    } else {
+      row.classList.remove('has-error');
+      err.style.display = 'none';
+    }
+  }
+
+  function validateEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nombre = document.getElementById('f-nombre').value.trim();
+    var email = document.getElementById('f-email').value.trim();
+    var asunto = document.getElementById('f-asunto').value;
+    var mensaje = document.getElementById('f-mensaje').value.trim();
+    var captcha = document.getElementById('f-captcha').value.trim();
+
+    var valid = true;
+
+    if (!nombre || nombre.length < 2) { setError('row-nombre','err-nombre',true); valid = false; } else setError('row-nombre','err-nombre',false);
+    if (!validateEmail(email)) { setError('row-email','err-email',true); valid = false; } else setError('row-email','err-email',false);
+    if (!asunto) { setError('row-asunto','err-asunto',true); valid = false; } else setError('row-asunto','err-asunto',false);
+    if (!mensaje || mensaje.length < 20) { setError('row-mensaje','err-mensaje',true); valid = false; } else setError('row-mensaje','err-mensaje',false);
+    if (captcha !== '7') { setError('row-captcha','err-captcha',true); valid = false; } else setError('row-captcha','err-captcha',false);
+
+    if (!valid) return;
+
+    /* Hide form, show success */
+    form.style.display = 'none';
+    successName.textContent = nombre;
+    successEmail.textContent = email;
+    successEl.style.display = 'block';
+  });
+})();
+</script>
+
+</body>
+</html>

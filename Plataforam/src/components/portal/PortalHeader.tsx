@@ -43,7 +43,7 @@ export function PortalHeader({ user, active, cartCount = 0, onCartOpen }: Props)
       }}>
 
         {/* Logo + Brand */}
-        <a href="http://localhost:5000" style={{
+        <a href="/index.html" style={{
           display: 'flex', alignItems: 'center', gap: 10,
           textDecoration: 'none', marginRight: 32, flexShrink: 0,
         }}>

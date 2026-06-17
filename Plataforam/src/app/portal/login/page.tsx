@@ -202,7 +202,7 @@ export default function LoginPage() {
 
           {/* Back to web */}
           <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <a href="http://localhost:5000" style={{
+            <a href="/index.html" style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
               color: 'rgba(201,212,232,.7)', fontSize: 13,
               textDecoration: 'none', transition: 'color .15s',
