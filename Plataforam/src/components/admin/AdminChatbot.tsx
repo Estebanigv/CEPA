@@ -134,7 +134,7 @@ export function AdminChatbot() {
       </button>
 
       {/* Chat panel */}
-      <div style={{
+      <div onClick={e => e.stopPropagation()} style={{
         position: 'fixed', bottom: 82, right: 24, zIndex: 9998,
         width: 320, maxHeight: 480,
         background: '#fff', borderRadius: 18,
@@ -189,7 +189,8 @@ export function AdminChatbot() {
           {chips.map(chip => (
             <button
               key={chip.id}
-              onClick={chip.action}
+              type="button"
+              onClick={e => { e.stopPropagation(); chip.action(); }}
               style={{
                 background: '#fff', border: '1.5px solid var(--color-primary, #185FA5)',
                 color: 'var(--color-primary, #185FA5)', borderRadius: 999,

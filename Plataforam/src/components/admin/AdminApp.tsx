@@ -45,6 +45,7 @@ export function AdminApp({ data }: { data: AdminData }) {
   const [view, setView] = useState<ViewId>('dashboard');
   const [openTx, setOpenTx] = useState<Transaction | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [mobSidebarOpen, setMobSidebarOpen] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const showToast = (msg: string) => {
@@ -57,6 +58,7 @@ export function AdminApp({ data }: { data: AdminData }) {
   const go = (v: ViewId) => {
     setOpenTx(null);
     setView(v);
+    setMobSidebarOpen(false);
   };
 
   let screen: React.ReactNode = null;
@@ -80,15 +82,20 @@ export function AdminApp({ data }: { data: AdminData }) {
 
   return (
     <div className="admin">
-      <aside className="sidebar">
+      {mobSidebarOpen && (
+        <div
+          style={{ position:'fixed', inset:0, background:'rgba(22,32,43,.4)', zIndex:99 }}
+          onClick={() => setMobSidebarOpen(false)}
+        />
+      )}
+
+      <aside className={`sidebar${mobSidebarOpen ? ' is-open' : ''}`}>
         <div className="sb-brand">
-          <div className="sb-logo">
-            <Icon name="shieldUser" size={20} />
-            <small>CEPA</small>
-          </div>
-          <div className="sb-brand-txt">
-            <b>CEPA Admin</b>
-            <span>Compañía de María Apoquindo</span>
+          <div style={{ display:'flex', flexDirection:'column', alignItems:'center', width:'100%', padding:'4px 0 8px' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/logo.png" alt="CEPA" style={{ width:56, height:56, objectFit:'contain', marginBottom:8, filter:'drop-shadow(0 2px 8px rgba(0,0,0,.18))' }} />
+            <div style={{ fontSize:13, fontWeight:800, color:'var(--color-ink)', letterSpacing:'-.01em' }}>CEPA Admin</div>
+            <div style={{ fontSize:11, color:'var(--color-muted)', textAlign:'center', lineHeight:1.3 }}>Compañía de María Apoquindo</div>
           </div>
         </div>
         <nav className="sb-nav">
@@ -128,9 +135,23 @@ export function AdminApp({ data }: { data: AdminData }) {
 
       <main className="main">
         <header className="topbar">
-          <div>
-            <h1>{meta.t}</h1>
-            <div className="tb-sub">{meta.s}</div>
+          <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <button
+              className="mob-menu-btn x-btn"
+              style={{ width:36, height:36 }}
+              aria-label="Abrir menú"
+              onClick={() => setMobSidebarOpen(true)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/logo.png" alt="CEPA" className="mob-logo" style={{ width:30, height:30, objectFit:'contain' }} />
+            <div>
+              <h1>{meta.t}</h1>
+              <div className="tb-sub">{meta.s}</div>
+            </div>
           </div>
           <div className="topbar-actions">
             <div className="period">

@@ -131,12 +131,21 @@ export default function ConceptosPage() {
         /* Cart */
         .cart-item { padding:14px 0; border-bottom:1px solid #f0f2f6; }
         .cart-item:last-child { border-bottom:none; }
+
+        /* Responsive */
+        .tracker-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px; }
+        @media (max-width:700px) {
+          .tracker-grid { grid-template-columns:1fr; }
+        }
+        @media (max-width:520px) {
+          .pg-main { padding:16px 14px 48px !important; }
+        }
       `}</style>
 
       <div style={{ minHeight:'100vh', background:'#f2f4f8' }}>
         <PortalHeader user={user} active="conceptos" cartCount={cartCount} onCartOpen={() => setCartOpen(true)} />
 
-        <main className="pg-wrap" style={{ maxWidth:1160, margin:'0 auto', padding:'28px 24px 64px' }}>
+        <main className="pg-wrap pg-main" style={{ maxWidth:1160, margin:'0 auto', padding:'28px 24px 64px' }}>
 
           {/* ── Identity banner ── */}
           <div style={{
@@ -199,7 +208,7 @@ export default function ConceptosPage() {
           </div>
 
           {/* ── Cuota tracker + Pending summary ── */}
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14, marginBottom:22 }}>
+          <div className="tracker-grid">
 
             {/* Tracker card */}
             <div style={{
