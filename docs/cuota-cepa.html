@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cuota CEPA y Becas · CEPA Compañía de María Apoquindo</title>
+<meta name="description" content="Cuota CEPA 2026, Beca de Fallecimiento y Becas Solidarias del Centro de Padres y Apoderados del Colegio Compañía de María Apoquindo." />
+<link rel="canonical" href="https://www.cepaciamaria.cl/cuota-cepa.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#1B2A4A" />
+
+<!-- Open Graph / redes sociales -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CEPA · Compañía de María Apoquindo" />
+<meta property="og:title" content="Cuota CEPA y Becas · CEPA Compañía de María Apoquindo" />
+<meta property="og:description" content="Cuota CEPA 2026 ($50.000 por familia), Beca de Fallecimiento y Becas Solidarias. Medios de pago y cómo pagar en línea vía Web Pay." />
+<meta property="og:url" content="https://www.cepaciamaria.cl/cuota-cepa.html" />
+<meta property="og:locale" content="es_CL" />
+<meta property="og:image" content="https://www.cepaciamaria.cl/assets/logo.png" />
+<meta property="og:image:alt" content="Escudo del Centro de Padres — Compañía de María Apoquindo" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Cuota CEPA y Becas · CEPA Compañía de María Apoquindo" />
+<meta name="twitter:description" content="Cuota CEPA 2026, Beca de Fallecimiento y Becas Solidarias del Colegio Compañía de María Apoquindo." />
+<meta name="twitter:image" content="https://www.cepaciamaria.cl/assets/logo.png" />
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="apple-touch-icon" href="assets/logo.png" />
+
+<!-- Datos estructurados -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://www.cepaciamaria.cl/" },
+    { "@type": "ListItem", "position": 2, "name": "Cuotas y Becas", "item": "https://www.cepaciamaria.cl/cuota-cepa.html" }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/cepa.css" />
+<link rel="stylesheet" href="assets/chatbot.css" />
+</head>
+<body>
+<a href="#main" class="skip">Saltar al contenido</a>
+
+<!-- ============ NAVBAR ============ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="brand" aria-label="Inicio — CEPA Compañía de María">
+      <span class="brand__crest"><img src="assets/logo.png" width="46" height="46" decoding="async" alt="Escudo Compañía de María Apoquindo — Centro de Padres" /></span>
+      <span class="brand__txt">
+        <span class="brand__name">CEPA</span>
+        <span class="brand__sub">Compañía de María Apoquindo</span>
+      </span>
+    </a>
+
+    <nav class="nav__menu" aria-label="Principal">
+      <a href="noticias.html" class="nav__link">Noticias</a>
+      <a href="contacto.html" class="nav__link">Contacto</a>
+    </nav>
+
+    <div class="nav__actions">
+      <a href="http://localhost:3001/portal/login" class="nav__pay">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Pagar cuota
+      </a>
+      <button class="nav__burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span class="nav__burger-txt">Menú</span>
+      </button>
+    </div>
+    <a href="http://localhost:3001/admin/login" class="nav__login" title="Administración CEPA">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <span class="nav__login-txt">Admin</span>
+    </a>
+  </div>
+</header>
+
+<!-- Overlay -->
+<div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+
+<!-- Panel lateral completo -->
+<nav class="drawer" id="drawer" aria-label="Menú completo" role="dialog" aria-modal="true">
+  <div class="drawer__head">
+    <a href="index.html" class="brand drawer__brand" aria-label="Inicio">
+      <span class="brand__crest"><img src="assets/logo.png" width="36" height="36" decoding="async" alt="CEPA" /></span>
+      <span class="brand__txt">
+        <span class="brand__name" style="color:var(--color-primary)">CEPA</span>
+        <span class="brand__sub" style="color:var(--color-muted)">Compañía de María Apoquindo</span>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawer-close" aria-label="Cerrar menú">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer__body">
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Institución</p>
+      <a href="index.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        El CEPA — Quiénes somos
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6M3 15h6"/></svg>
+        Directorio
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Misión y valores
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Cuotas y Becas</p>
+      <a href="cuota-cepa.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Cuota Centro de Padres 2026
+      </a>
+      <a href="becas-solidarias.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Becas Solidarias
+      </a>
+      <a href="cuota-cepa.html#fallecimiento" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Fondo por Fallecimiento
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Actividades y Comunidad</p>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Eventos del CEPA
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 010 20M2 12h20M12 2c2.5 2.5 4 6 4 10s-1.5 7.5-4 10M12 2C9.5 4.5 8 8 8 12s1.5 7.5 4 10"/></svg>
+        Deportes CEPA
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><line x1="12" y1="22" x2="12" y2="12"/></svg>
+        Cristo en la Calle
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        Pastoral Familiar
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Servicios y Convenios</p>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Convenios vigentes
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Transporte Escolar
+      </a>
+      <a href="#" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+        Economía Circular
+      </a>
+    </div>
+
+    <div class="drawer__section">
+      <p class="drawer__section-label">Información</p>
+      <a href="noticias.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a4 4 0 01-4-4V6"/><path d="M2 13.5h4"/><path d="M2 8.5h4"/></svg>
+        Noticias y actividades
+      </a>
+      <a href="faq.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Preguntas frecuentes
+      </a>
+      <a href="contacto.html" class="drawer__item">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Contacto
+      </a>
+      <a href="http://localhost:3001/admin" class="drawer__item drawer__item--admin">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Panel Administración
+      </a>
+    </div>
+
+  </div>
+
+  <div class="drawer__foot">
+    <a href="http://localhost:3001/portal/login" class="drawer__pay">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Pagar cuota 2026
+    </a>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="page-hero__pat"></div>
+    <div class="container">
+      <nav class="crumbs" aria-label="Ruta de navegación">
+        <a href="index.html">Inicio</a><span class="sep">/</span>
+        <span aria-current="page">Cuotas y Becas</span>
+      </nav>
+      <p class="eyebrow">Cuotas y Becas</p>
+      <h1>Cuota CEPA y apoyo a las familias</h1>
+      <p class="page-hero__lead">Tu aporte anual sostiene las actividades, la acción social y las becas del Centro de Padres. Conoce el detalle, los medios de pago y los apoyos disponibles para la comunidad.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- TABS -->
+      <div data-tabs>
+        <div class="tabs__list" role="tablist" aria-label="Cuotas y becas">
+          <button class="tabs__tab" role="tab" id="tab-cuota" aria-controls="panel-cuota" aria-selected="true" tabindex="0">Cuota CEPA</button>
+          <button class="tabs__tab" role="tab" id="tab-fallecimiento" aria-controls="panel-fallecimiento" aria-selected="false" tabindex="-1">Beca de Fallecimiento</button>
+          <button class="tabs__tab" role="tab" id="tab-solidarias" aria-controls="panel-solidarias" aria-selected="false" tabindex="-1">Becas Solidarias</button>
+        </div>
+
+        <!-- PANEL: CUOTA -->
+        <div class="layout-2col" role="tabpanel" id="panel-cuota" aria-labelledby="tab-cuota">
+          <div class="prose">
+            <h2 style="margin-top:0;">El aporte que sostiene a la comunidad</h2>
+            <p>La <strong>Cuota CEPA</strong> es el aporte anual y voluntario de cada familia del Colegio Compañía de María Apoquindo. Con ella financiamos actividades de integración, acción social, becas solidarias y las atenciones que el Centro de Padres ofrece a toda la comunidad.</p>
+            <div class="callout">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <p>El valor es <strong>por familia</strong>, no por estudiante. Una sola cuota cubre a todos los hijos e hijas matriculados en el colegio.</p>
+            </div>
+            <h3>Medios de pago</h3>
+            <ul>
+              <li><strong>Web Pay</strong> — tarjeta de crédito o débito, en línea y con comprobante inmediato.</li>
+              <li><strong>Hasta 3 cuotas precio contado</strong> con tarjeta de crédito vía Web Pay.</li>
+              <li><strong>Transferencia bancaria</strong> a la cuenta del CEPA (datos en el pie de página).</li>
+            </ul>
+            <h3>Cómo pagar en línea</h3>
+            <ol class="steps" style="margin-top:1rem;">
+              <li><span><b>Ingresa a la plataforma de pagos</b><p>Con el botón "Pagar cuota" o accediendo con tu cuenta de apoderado.</p></span></li>
+              <li><span><b>Identifica a tu familia</b><p>Verifica los datos y el período que vas a pagar.</p></span></li>
+              <li><span><b>Elige tu medio de pago</b><p>Web Pay en una o hasta 3 cuotas, o transferencia.</p></span></li>
+              <li><span><b>Recibe tu comprobante</b><p>Queda registrado en tu historial de apoderado al instante.</p></span></li>
+            </ol>
+          </div>
+          <aside>
+            <div class="pricecard">
+              <span class="badge badge--info">Año escolar 2026</span>
+              <div style="margin-top:1rem;">
+                <div class="pricecard__amt">$50.000</div>
+                <div class="pricecard__per">por familia · aporte anual</div>
+              </div>
+              <ul>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg> Cubre a todos tus hijos en el colegio</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg> Hasta 3 cuotas precio contado (Web Pay)</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg> Comprobante inmediato</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg> Financia becas y actividades</li>
+              </ul>
+              <a href="#" class="btn btn--pay btn--block btn--lg">
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                Pagar cuota 2026
+              </a>
+              <p style="text-align:center; font-size:.82rem; color:var(--color-muted); margin:.9rem 0 0;">Pago seguro vía Web Pay · Transbank</p>
+            </div>
+          </aside>
+        </div>
+
+        <!-- PANEL: FALLECIMIENTO -->
+        <div class="layout-2col" role="tabpanel" id="panel-fallecimiento" aria-labelledby="tab-fallecimiento" hidden>
+          <div class="prose" id="fallecimiento">
+            <h2 style="margin-top:0;">Beca de Fallecimiento</h2>
+            <p>Un fondo solidario de acompañamiento que apoya a las familias de la comunidad ante el fallecimiento de un apoderado, ayudando a que los estudiantes puedan continuar su trayectoria escolar.</p>
+            <div class="callout callout--burgundy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg>
+              <p>Esta beca se financia con el aporte de toda la comunidad a través de la Cuota CEPA, expresando el sentido solidario de nuestro colegio.</p>
+            </div>
+            <h3>Qué considera</h3>
+            <ul>
+              <li>Acompañamiento del CEPA a la familia afectada.</li>
+              <li>Apoyo para la continuidad escolar de los estudiantes. <span class="tbd">[detalle a confirmar por el CEPA]</span></li>
+              <li>Coordinación con el Colegio según cada caso.</li>
+            </ul>
+            <h3>Cómo solicitarla</h3>
+            <p>Escribe a <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a> o acércate a la oficina del CEPA. El directorio evaluará cada situación con confidencialidad y cercanía.</p>
+          </div>
+          <aside>
+            <div class="pricecard">
+              <span class="badge" style="color:var(--color-burgundy); background:#f6eaec;">Fondo solidario</span>
+              <h3 style="margin:1rem 0 .3rem;">Acompañamiento a las familias</h3>
+              <p style="color:var(--color-muted); font-size:.93rem; margin:0;">Un beneficio que refleja el espíritu de comunidad de la Compañía de María.</p>
+              <a href="mailto:cepa@cepaciamaria.cl" class="btn btn--primary btn--block" style="margin-top:1.3rem;">Solicitar información</a>
+            </div>
+          </aside>
+        </div>
+
+        <!-- PANEL: SOLIDARIAS -->
+        <div class="layout-2col" role="tabpanel" id="panel-solidarias" aria-labelledby="tab-solidarias" hidden>
+          <div class="prose">
+            <h2 style="margin-top:0;">Becas Solidarias</h2>
+            <p>Apoyo económico para que ninguna familia de nuestra comunidad quede atrás. Las Becas Solidarias se financian con la Cuota CEPA y con campañas de la comunidad.</p>
+            <p>Conoce los requisitos, plazos y el proceso de postulación en la página dedicada.</p>
+            <a href="becas-solidarias.html" class="btn btn--primary" style="margin-top:.5rem;">Ir a Becas Solidarias →</a>
+          </div>
+          <aside>
+            <div class="callout callout--pay" style="flex-direction:column;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM3 21a7 7 0 0114 0M18 8v6M21 11h-6"/></svg>
+              <p><strong>¿Necesitas apoyo?</strong> Postular es confidencial y cercano. Escríbenos a <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a>.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER PAGO -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="paybanner" style="background:linear-gradient(160deg,var(--color-primary-700),var(--color-primary)); border-radius:var(--radius-lg); color:#fff; overflow:hidden; position:relative; padding:clamp(2.2rem,5vw,3.4rem); display:flex; justify-content:space-between; align-items:center; gap:2rem; flex-wrap:wrap;" data-reveal>
+        <div>
+          <h2 style="color:#fff; margin-bottom:.4rem;">¿List@ para aportar a la comunidad?</h2>
+          <p style="color:#c9d4e8; margin:0; max-width:46ch;">Paga tu Cuota CEPA 2026 de forma rápida y segura.</p>
+        </div>
+        <a href="#" class="btn btn--pay btn--lg"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Ir a pagar</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="brand" style="margin-bottom:.4rem;"><span class="brand__crest"><img src="assets/logo.png" width="46" height="46" decoding="async" alt="Escudo Compañía de María Apoquindo — Centro de Padres" /></span><span class="brand__txt"><span class="brand__name">CEPA</span><span class="brand__sub">Compañía de María Apoquindo</span></span></div>
+        <p class="footer__lema">Juntos Somos Comunidad</p>
+        <p style="font-size:.88rem; color:#94a3c2; margin:0;">Centro de Padres y Apoderados · Congregación de Santa Juana de Lestonnac.</p>
+      </div>
+      <div><h4>Navegación</h4><ul><li><a href="index.html">Inicio</a></li><li><a href="#">Quiénes somos</a></li><li><a href="cuota-cepa.html">Cuotas y Becas</a></li><li><a href="#">Actividades</a></li><li><a href="#">Servicios</a></li><li><a href="noticias.html">Noticias</a></li></ul></div>
+      <div>
+        <h4>Contacto</h4>
+        <ul><li><a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a></li><li>Oficina CEPA <span class="tbd" style="color:#f0d98c; background:rgba(240,217,140,.12);">horario</span></li><li>Av. <span class="tbd" style="color:#f0d98c; background:rgba(240,217,140,.12);">dirección colegio</span></li><li><a href="#">Acceso apoderados →</a></li></ul>
+        <div class="footer__social" style="margin-top:1rem;"><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V7a2 2 0 012-2h2V2h-3a4 4 0 00-4 4v3H8v3h3v8h3v-8h3l1-3z"/></svg></a></div>
+      </div>
+      <div>
+        <h4>Datos de transferencia</h4>
+        <div class="footer__bank">
+          <div><dt>Titular:</dt> <span class="tbd" style="color:#f0d98c; background:rgba(240,217,140,.12);">[CEPA Cía. de María]</span></div>
+          <div><dt>RUT:</dt> <span class="tbd" style="color:#f0d98c; background:rgba(240,217,140,.12);">[completar]</span></div>
+          <div><dt>Banco / Cuenta:</dt> <span class="tbd" style="color:#f0d98c; background:rgba(240,217,140,.12);">[completar]</span></div>
+          <div><dt>Email comprobante:</dt> cepa@cepaciamaria.cl</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom"><span>© <span data-year>2026</span> Centro de Padres y Apoderados · Colegio Compañía de María Apoquindo.</span><span>Hecho con cariño por y para la comunidad.</span></div>
+  </div>
+</footer>
+<script src="assets/cepa.js" defer></script>
+<script src="assets/chatbot.js" defer></script>
+</body>
+</html>
