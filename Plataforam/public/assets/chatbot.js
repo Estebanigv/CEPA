@@ -277,7 +277,7 @@
       chipsEl.innerHTML = '';
       items.forEach(function (item) {
         var chip = el('button', { className: 'cepa-chip', type: 'button' }, [item.label]);
-        chip.addEventListener('click', function () { item.action(); });
+        chip.addEventListener('click', function (e) { e.stopPropagation(); item.action(); });
         chipsEl.appendChild(chip);
       });
     }
