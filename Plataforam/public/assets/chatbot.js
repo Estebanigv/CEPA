@@ -295,7 +295,7 @@
       setChips([
         { label: '↩ Volver al menú', action: showMainMenu },
         { label: 'Pagar cuota', action: function () {
-          window.open('http://localhost:3001/portal/login', '_blank');
+          window.open('/portal/login', '_blank');
         }}
       ]);
     }
