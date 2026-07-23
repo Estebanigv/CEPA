@@ -1,9 +1,8 @@
 'use client';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authenticate, setSession, getSession } from '@/lib/portal-session';
-import { fmtRut } from '@/lib/portal-data';
+import { setSession } from '@/lib/portal-session';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,28 +11,35 @@ export default function LoginPage() {
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (getSession()) router.replace('/portal/conceptos');
-  }, [router]);
-
   function handleRut(v: string) {
-    setRut(fmtRut(v));
+    // Acepta RUT o correo (mientras se cargan los RUT). No forzamos formato.
+    setRut(v);
     setErr('');
   }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!rut || !pwd) { setErr('Ingresa tu RUT y contraseña.'); return; }
+    if (!rut || !pwd) { setErr('Ingresa tu RUT (o correo) y contraseña.'); return; }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 700));
-    const user = authenticate(rut, pwd);
-    if (!user) {
-      setErr('RUT o contraseña incorrectos.');
+    try {
+      const res = await fetch('/api/portal/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rut, pwd }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        try { setSession(data.user); } catch {}
+        router.push('/portal/mis-datos');
+        router.refresh();
+      } else {
+        setErr(data.error || 'No pudimos iniciar sesión.');
+        setLoading(false);
+      }
+    } catch {
+      setErr('No se pudo conectar. Intenta de nuevo.');
       setLoading(false);
-      return;
     }
-    setSession(user);
-    router.push('/portal/conceptos');
   }
 
   return (
@@ -120,21 +126,21 @@ export default function LoginPage() {
               Iniciar sesión
             </h2>
             <p style={{ fontSize: 13.5, color: '#5b6472', margin: '0 0 28px' }}>
-              Accede con tu RUT para gestionar tus pagos.
+              Accede con tu RUT o correo para ver tus datos y pagos.
             </p>
 
             <form onSubmit={submit}>
               <div style={{ marginBottom: 16 }}>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#1B2A4A', marginBottom: 7 }}>
-                  RUT
+                  RUT o correo
                 </label>
                 <input
                   className="login-input"
                   type="text"
-                  placeholder="12.345.678-9"
+                  placeholder="12.345.678-9  ·  correo@ejemplo.cl"
                   value={rut}
                   onChange={e => handleRut(e.target.value)}
-                  maxLength={12}
+                  maxLength={60}
                   autoComplete="username"
                   autoFocus
                 />

@@ -100,6 +100,62 @@ const MOCK: AdminData = {
    Lectura desde Supabase (cuando hay credenciales)
    ========================================================================= */
 
+/** Forma cruda de una fila de `families` en Supabase (post-migración 0002). */
+type FamilyRow = {
+  id: string;
+  name: string;
+  apoderado: string;
+  rut: string | null;
+  email: string | null;
+  cursos: string | null;
+  status: Family['status'];
+  aportado: number;
+  pend: number;
+  padre_nombre: string | null;
+  padre_email: string | null;
+  madre_nombre: string | null;
+  madre_email: string | null;
+  telefono: string | null;
+  cepa_2026: boolean;
+  seguro_2026: boolean;
+  cepa_folio_2026: string | null;
+  seguro_folio_2026: string | null;
+  historial: Record<string, unknown> | null;
+};
+
+/* Monto nominal de referencia por cuota (el Excel no registra montos reales). */
+const CEPA_AMOUNT = 50000;
+const SEGURO_AMOUNT = 8000;
+
+/** KPIs de cobertura calculados desde las familias reales. */
+function computeKpis(rows: FamilyRow[]): Kpis {
+  const total = rows.length || 1;
+  const cepaOk = rows.filter((f) => f.cepa_2026).length;
+  const segOk = rows.filter((f) => f.seguro_2026).length;
+  const pend = rows.filter((f) => f.status !== 'paid').length;
+  const recaudado = cepaOk * CEPA_AMOUNT + segOk * SEGURO_AMOUNT;
+  return {
+    recaudado,
+    recaudadoDelta: 0,
+    pagos: cepaOk + segOk,
+    pagosDelta: 0,
+    alDia: Math.round((cepaOk / total) * 100),
+    pendiente: pend * CEPA_AMOUNT,
+    vencido: 0,
+    ticket: cepaOk ? Math.round(recaudado / (cepaOk + segOk || 1)) : 0,
+  };
+}
+
+/** Recaudación (nominal) por concepto — CEPA vs Seguro, según cobertura 2026. */
+function computeByConcept(rows: FamilyRow[]): ConceptShare[] {
+  const cepaOk = rows.filter((f) => f.cepa_2026).length;
+  const segOk = rows.filter((f) => f.seguro_2026).length;
+  return [
+    { name: 'Cuota Centro de Padres', v: cepaOk * CEPA_AMOUNT, color: '#185FA5' },
+    { name: 'Seguro Escolar', v: segOk * SEGURO_AMOUNT, color: '#1D9E75' },
+  ];
+}
+
 async function fetchFromSupabase(): Promise<AdminData> {
   const sb = createAdminClient();
 
@@ -108,7 +164,7 @@ async function fetchFromSupabase(): Promise<AdminData> {
     sb.from('families').select('*').order('sort'),
     sb.from('students').select('*').order('sort'),
     sb.from('transactions').select('*').order('paid_at', { ascending: false }),
-    sb.from('dashboard_metrics').select('*').eq('id', 1).single(),
+    sb.from('dashboard_metrics').select('*').eq('id', 1).maybeSingle(),
     sb.from('monthly_revenue').select('*').order('sort'),
     sb.from('revenue_by_concept').select('*').order('sort'),
   ]);
@@ -118,11 +174,20 @@ async function fetchFromSupabase(): Promise<AdminData> {
   }
 
   const studentRows = (students.data ?? []) as Array<{ family_id: string; name: string; curso: string | null }>;
+  const familyRows = (families.data ?? []) as FamilyRow[];
+
+  /* KPIs y gráficos calculados desde la data real de familias (el Excel no trae
+     montos ni transacciones individuales; medimos cobertura de las cuotas 2026). */
+  const realKpis = computeKpis(familyRows);
+  const realByConcept = computeByConcept(familyRows);
+  const hasMonthly = (monthly.data ?? []).length > 0;
 
   return {
-    kpis: mapKpis(metrics.data),
-    monthly: (monthly.data ?? []).map((m): MonthPoint => ({ m: m.month, v: m.value })),
-    byConcept: (byConcept.data ?? []).map((c): ConceptShare => ({ name: c.name, v: c.value, color: c.color })),
+    kpis: metrics.data ? mapKpis(metrics.data) : realKpis,
+    monthly: hasMonthly ? (monthly.data ?? []).map((m): MonthPoint => ({ m: m.month, v: m.value })) : MONTHLY,
+    byConcept: (byConcept.data ?? []).length > 0
+      ? (byConcept.data ?? []).map((c): ConceptShare => ({ name: c.name, v: c.value, color: c.color }))
+      : realByConcept,
     transactions: (transactions.data ?? []).map(
       (t): Transaction => ({
         id: t.reference ?? '—',
@@ -137,20 +202,30 @@ async function fetchFromSupabase(): Promise<AdminData> {
       }),
     ),
     methods: METHODS,
-    families: (families.data ?? []).map(
+    families: familyRows.map(
       (f): Family => ({
         id: f.id,
         name: f.name,
         apoderado: f.apoderado,
-        rut: f.rut,
-        email: f.email,
-        cursos: f.cursos,
+        rut: f.rut ?? '—',
+        email: f.email ?? '',
+        cursos: f.cursos ?? '',
         students: studentRows
           .filter((s) => s.family_id === f.id)
           .map((s) => (s.curso ? `${s.name} (${s.curso})` : s.name)),
         status: f.status,
         aportado: f.aportado,
         pend: f.pend,
+        padreNombre: f.padre_nombre,
+        padreEmail: f.padre_email,
+        madreNombre: f.madre_nombre,
+        madreEmail: f.madre_email,
+        telefono: f.telefono,
+        cepa2026: f.cepa_2026,
+        seguro2026: f.seguro_2026,
+        cepaFolio2026: f.cepa_folio_2026,
+        seguroFolio2026: f.seguro_folio_2026,
+        historial: (f.historial ?? {}) as Family['historial'],
       }),
     ),
     concepts: (concepts.data ?? []).map(

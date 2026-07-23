@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Icon } from './Icon';
 import { clp, initials } from '@/lib/format';
-import type { AdminData, Family, FamilyStatus, IconName, Transaction } from '@/lib/types';
+import type { AdminData, Family, FamilyStatus, IconName } from '@/lib/types';
 
 const FAM_STATUS: Record<FamilyStatus, { label: string; cls: string; icon: IconName }> = {
   paid: { label: 'Al día', cls: 'badge--paid', icon: 'check' },
@@ -21,18 +21,56 @@ function FamBadge({ s }: { s: FamilyStatus }) {
   );
 }
 
+function Dot({ ok }: { ok: boolean }) {
+  return (
+    <span style={{ display: 'inline-flex', justifyContent: 'center' }}>
+      <Icon
+        name={ok ? 'checkSm' : 'x'}
+        size={14}
+        stroke={2.6}
+        style={{ color: ok ? 'var(--ok, #1D9E75)' : 'var(--color-faint, #c5d0e4)' }}
+      />
+    </span>
+  );
+}
+
+function FragmentRow({ year, cepa, seguro }: { year: string; cepa: boolean; seguro: boolean }) {
+  return (
+    <>
+      <span style={{ fontSize: 13, padding: '4px 0' }}>{year}</span>
+      <Dot ok={cepa} />
+      <Dot ok={seguro} />
+    </>
+  );
+}
+
+function CuotaCard({ label, paid, folio }: { label: string; paid?: boolean; folio?: string | null }) {
+  return (
+    <div className="card card-pad" style={{ padding: 16, boxShadow: 'none' }}>
+      <div className="stat-label">{label} 2026</div>
+      <div style={{ marginTop: 6 }}>
+        <span className={'badge ' + (paid ? 'badge--paid' : 'badge--pending')}>
+          <Icon name={paid ? 'check' : 'clock'} size={13} stroke={2.3} />
+          {paid ? 'Pagado' : 'Pendiente'}
+        </span>
+      </div>
+      {paid && folio ? (
+        <div className="muted" style={{ fontSize: 11.5, marginTop: 7 }}>Folio {folio}</div>
+      ) : null}
+    </div>
+  );
+}
+
 function FamilyDrawer({
   fam,
-  transactions,
   onClose,
   onRemind,
 }: {
   fam: Family;
-  transactions: Transaction[];
   onClose: () => void;
   onRemind: (f: Family) => void;
 }) {
-  const history = transactions.filter((t) => t.rut === fam.rut);
+  const years = Object.keys(fam.historial ?? {}).sort((a, b) => Number(b) - Number(a));
   return (
     <>
       <div className="scrim" onClick={onClose}></div>
@@ -53,35 +91,36 @@ function FamilyDrawer({
         </div>
         <div className="drawer-b">
           <div className="grid-2" style={{ marginBottom: 4 }}>
-            <div className="card card-pad" style={{ padding: 16, boxShadow: 'none' }}>
-              <div className="stat-label">Total aportado</div>
-              <div className="tnum" style={{ fontSize: 21, fontWeight: 700, color: 'var(--color-pay-600)', marginTop: 4 }}>
-                {clp(fam.aportado)}
-              </div>
-            </div>
-            <div className="card card-pad" style={{ padding: 16, boxShadow: 'none' }}>
-              <div className="stat-label">Pendiente</div>
-              <div
-                className="tnum"
-                style={{ fontSize: 21, fontWeight: 700, color: fam.pend ? 'var(--warn)' : 'var(--color-muted)', marginTop: 4 }}
-              >
-                {clp(fam.pend)}
-              </div>
-            </div>
+            <CuotaCard label="CEPA" paid={fam.cepa2026} folio={fam.cepaFolio2026} />
+            <CuotaCard label="Seguro" paid={fam.seguro2026} folio={fam.seguroFolio2026} />
           </div>
 
-          <div className="sec-label">Contacto</div>
+          <div className="sec-label">Apoderados</div>
+          {fam.padreNombre || fam.padreEmail ? (
+            <div className="kv">
+              <span className="kv-k">Padre</span>
+              <span className="kv-v">
+                {fam.padreNombre || '—'}
+                {fam.padreEmail ? <div className="muted" style={{ fontSize: 12 }}>{fam.padreEmail}</div> : null}
+              </span>
+            </div>
+          ) : null}
+          {fam.madreNombre || fam.madreEmail ? (
+            <div className="kv">
+              <span className="kv-k">Madre</span>
+              <span className="kv-v">
+                {fam.madreNombre || '—'}
+                {fam.madreEmail ? <div className="muted" style={{ fontSize: 12 }}>{fam.madreEmail}</div> : null}
+              </span>
+            </div>
+          ) : null}
           <div className="kv">
-            <span className="kv-k">Apoderado</span>
-            <span className="kv-v">{fam.apoderado}</span>
+            <span className="kv-k">Teléfono</span>
+            <span className="kv-v">{fam.telefono || '—'}</span>
           </div>
           <div className="kv">
             <span className="kv-k">RUT</span>
             <span className="kv-v mono">{fam.rut}</span>
-          </div>
-          <div className="kv">
-            <span className="kv-k">Email</span>
-            <span className="kv-v">{fam.email}</span>
           </div>
 
           <div className="sec-label">Estudiantes asociados</div>
@@ -94,28 +133,22 @@ function FamilyDrawer({
             </div>
           ))}
 
-          <div className="sec-label">Histórico de pagos</div>
-          {history.length ? (
-            history.map((t, i) => (
-              <div className="mini-item" key={i} style={{ padding: '10px 8px' }}>
-                <div className="mini-main">
-                  <div className="mini-name" style={{ fontWeight: 500 }}>
-                    {t.concepts}
-                  </div>
-                  <div className="mini-sub">
-                    {t.date.split(' ')[0]} · {t.method}
-                  </div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div className="tnum" style={{ fontWeight: 700, fontSize: 13 }}>
-                    {clp(t.amount)}
-                  </div>
-                </div>
-              </div>
-            ))
+          <div className="sec-label">Historial anual (CEPA / Seguro)</div>
+          {years.length ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: '2px 14px', alignItems: 'center', padding: '2px 8px' }}>
+              <span className="muted" style={{ fontSize: 11, fontWeight: 700 }}>Año</span>
+              <span className="muted" style={{ fontSize: 11, fontWeight: 700, textAlign: 'center' }}>CEPA</span>
+              <span className="muted" style={{ fontSize: 11, fontWeight: 700, textAlign: 'center' }}>Seguro</span>
+              {years.map((y) => {
+                const h = fam.historial![y];
+                return (
+                  <FragmentRow key={y} year={y} cepa={h.cepa} seguro={h.seguro} />
+                );
+              })}
+            </div>
           ) : (
             <div className="muted" style={{ fontSize: 13, padding: '4px 8px' }}>
-              Sin pagos registrados este año.
+              Sin historial registrado.
             </div>
           )}
         </div>
@@ -221,7 +254,6 @@ export function Familias({ data, onToast }: { data: AdminData; onToast: (msg: st
       {open && (
         <FamilyDrawer
           fam={open}
-          transactions={data.transactions}
           onClose={() => setOpen(null)}
           onRemind={(f) => {
             setOpen(null);

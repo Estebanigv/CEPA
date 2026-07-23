@@ -49,11 +49,8 @@ function BarChart({ monthly }: { monthly: AdminData['monthly'] }) {
       <div className="panel-h">
         <div>
           <h3>Recaudación por mes</h3>
-          <div className="ph-sub">Año 2026 · CLP</div>
+          <div className="ph-sub">Año 2026 · CLP (referencial)</div>
         </div>
-        <span className="badge badge--ok-soft">
-          <Icon name="chart" size={13} /> +12,4%
-        </span>
       </div>
       <div className="bars">
         {monthly.map((d, i) => (
@@ -72,10 +69,7 @@ function BarChart({ monthly }: { monthly: AdminData['monthly'] }) {
   );
 }
 
-function Donut() {
-  const paid = 81;
-  const pend = 14;
-  const over = 5;
+function Donut({ paid, pend, over }: { paid: number; pend: number; over: number }) {
   const grad = `conic-gradient(var(--color-pay) 0 ${paid}%, var(--warn) ${paid}% ${paid + pend}%, var(--danger) ${paid + pend}% 100%)`;
   return (
     <div className="card">
@@ -157,28 +151,52 @@ export function Dashboard({
   onGoFamilias: () => void;
 }) {
   const { kpis } = data;
-  const recent = data.transactions.slice(0, 5);
-  const upcoming: UpcomingItem[] = [
-    { name: 'Familia Maldonado P.', concept: 'Cuota Centro de Padres', due: 'Vencido hace 9 días', status: 'overdue' },
-    { name: 'Familia Tapia Ríos', concept: 'Cuota Centro de Padres', due: 'Vence en 3 días', status: 'pending' },
-    { name: 'Familia Pérez González', concept: 'Fútbol Masculino 1er Sem', due: 'Vence en 6 días', status: 'pending' },
-    { name: 'Familia Rojas Mena', concept: 'Cuota Beca de Fallecimiento', due: 'Vence en 12 días', status: 'pending' },
-  ];
+
+  /* Actividad reciente = familias que ya pagaron la cuota CEPA 2026. */
+  const recent = data.families
+    .filter((f) => f.cepa2026)
+    .slice(0, 5)
+    .map(
+      (f): Transaction => ({
+        id: f.cepaFolio2026 ? `Folio ${f.cepaFolio2026}` : '—',
+        date: '2026',
+        name: f.apoderado,
+        rut: f.rut,
+        curso: f.cursos,
+        concepts: 'Cuota Centro de Padres 2026',
+        amount: f.aportado,
+        method: '—',
+        status: 'paid',
+      }),
+    );
+
+  /* Vencimientos = familias con cuota CEPA/Seguro 2026 pendiente. */
+  const upcoming: UpcomingItem[] = data.families
+    .filter((f) => f.status !== 'paid')
+    .slice(0, 5)
+    .map((f): UpcomingItem => {
+      const falta = [!f.cepa2026 ? 'CEPA' : null, !f.seguro2026 ? 'Seguro' : null].filter(Boolean).join(' + ');
+      return { name: f.apoderado, concept: `${falta || 'Cuota'} 2026 pendiente`, due: 'Sin pagar', status: 'pending' };
+    });
+
+  /* Distribución real de aportes (dona). */
+  const donutPaid = kpis.alDia;
+  const donutPend = Math.max(0, 100 - kpis.alDia);
   const overdueAv: CSSProperties = { background: 'var(--danger-100)', color: 'var(--danger)', borderColor: 'transparent' };
 
   return (
     <div className="content fade-up">
       <div className="stat-grid">
-        <Stat icon="wallet" ic="ic-green" label="Total recaudado" value={clp(kpis.recaudado)} delta="+12,4%" deltaDir="up" />
-        <Stat icon="receipt" ic="ic-blue" label="N° de pagos" value={kpis.pagos} delta="+8,1%" deltaDir="up" />
-        <Stat icon="shieldUser" ic="ic-blue" label="Familias al día" value={kpis.alDia + '%'} delta="+3,2%" deltaDir="up" />
-        <Stat icon="alert" ic="ic-amber" label="Pendiente + vencido" value={clp(kpis.pendiente + kpis.vencido)} delta="−5,0%" deltaDir="down" />
-        <Stat icon="chart" ic="ic-blue" label="Ticket promedio" value={clp(kpis.ticket)} delta="+1,8%" deltaDir="up" />
+        <Stat icon="wallet" ic="ic-green" label="Total recaudado (nominal)" value={clp(kpis.recaudado)} />
+        <Stat icon="receipt" ic="ic-blue" label="N° de pagos 2026" value={kpis.pagos} />
+        <Stat icon="shieldUser" ic="ic-blue" label="Familias al día" value={kpis.alDia + '%'} />
+        <Stat icon="alert" ic="ic-amber" label="Pendiente (nominal)" value={clp(kpis.pendiente + kpis.vencido)} />
+        <Stat icon="chart" ic="ic-blue" label="Ticket promedio" value={clp(kpis.ticket)} />
       </div>
 
       <div className="chart-row">
         <BarChart monthly={data.monthly} />
-        <Donut />
+        <Donut paid={donutPaid} pend={donutPend} over={0} />
       </div>
 
       <div className="chart-row" style={{ gridTemplateColumns: '1fr 1fr' }}>
@@ -250,9 +268,6 @@ export function Dashboard({
       </div>
 
       <ByConcept byConcept={data.byConcept} />
-      <div className="placeholder-note" style={{ marginTop: 18 }}>
-        · datos de ejemplo — placeholder ·
-      </div>
     </div>
   );
 }

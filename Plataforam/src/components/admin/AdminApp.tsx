@@ -10,7 +10,6 @@ import { Cobranza } from './Cobranza';
 import { Reportes } from './Reportes';
 import { Usuarios } from './Usuarios';
 import { AdminChatbot } from './AdminChatbot';
-import { clearAdminSession } from '@/lib/admin-session';
 import { useRouter } from 'next/navigation';
 import type { AdminData, IconName, Transaction } from '@/lib/types';
 
@@ -59,6 +58,12 @@ export function AdminApp({ data }: { data: AdminData }) {
     setOpenTx(null);
     setView(v);
     setMobSidebarOpen(false);
+  };
+
+  const logout = async () => {
+    try { await fetch('/api/admin/logout', { method: 'POST' }); } catch {}
+    router.push('/admin/login');
+    router.refresh();
   };
 
   let screen: React.ReactNode = null;
@@ -126,7 +131,7 @@ export function AdminApp({ data }: { data: AdminData }) {
             className="x-btn"
             style={{ width: 32, height: 32, marginLeft: 'auto' }}
             title="Cerrar sesión"
-            onClick={() => { clearAdminSession(); router.push('/admin/login'); }}
+            onClick={logout}
           >
             <Icon name="logout" size={16} />
           </button>
@@ -167,7 +172,7 @@ export function AdminApp({ data }: { data: AdminData }) {
               <input className="input" placeholder="Buscar…" />
             </div>
             <button
-              onClick={() => { clearAdminSession(); router.push('/admin/login'); }}
+              onClick={logout}
               title="Cerrar sesión"
               style={{
                 marginLeft: 8, display: 'flex', alignItems: 'center', gap: 6,

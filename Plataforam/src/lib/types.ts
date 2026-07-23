@@ -35,6 +35,15 @@ export interface Transaction {
   status: PaymentStatus;
 }
 
+/** Historial anual de una familia: año -> estado de las dos cuotas. */
+export interface YearStatus {
+  cepa: boolean;
+  cepa_folio?: string | null;
+  seguro: boolean;
+  seguro_folio?: string | null;
+  firma?: string | null;
+}
+
 export interface Family {
   id: string;
   name: string;
@@ -46,6 +55,17 @@ export interface Family {
   status: FamilyStatus;
   aportado: number;
   pend: number;
+  /* ---- Datos de la base real del Centro de Padres (opcionales) ---- */
+  padreNombre?: string | null;
+  padreEmail?: string | null;
+  madreNombre?: string | null;
+  madreEmail?: string | null;
+  telefono?: string | null;
+  cepa2026?: boolean;
+  seguro2026?: boolean;
+  cepaFolio2026?: string | null;
+  seguroFolio2026?: string | null;
+  historial?: Record<string, YearStatus>;
 }
 
 export interface Kpis {

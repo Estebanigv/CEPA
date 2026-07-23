@@ -1,8 +1,7 @@
 'use client';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { adminLogin, getAdminSession } from '@/lib/admin-session';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -11,19 +10,26 @@ export default function AdminLoginPage() {
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (getAdminSession()) router.replace('/admin');
-  }, [router]);
-
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!user || !pass) { setErr('Ingresa usuario y contraseña.'); return; }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600));
-    if (adminLogin(user, pass)) {
-      router.push('/admin');
-    } else {
-      setErr('Credenciales incorrectas.');
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user, pass }),
+      });
+      if (res.ok) {
+        router.push('/admin');
+        router.refresh();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setErr(data.error || 'Credenciales incorrectas.');
+        setLoading(false);
+      }
+    } catch {
+      setErr('No se pudo conectar. Intenta de nuevo.');
       setLoading(false);
     }
   }
