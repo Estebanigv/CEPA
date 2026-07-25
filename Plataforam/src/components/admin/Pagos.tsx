@@ -211,6 +211,8 @@ export function Pagos({
       (method === 'todos' || t.method === method) &&
       (q === '' || (t.name + t.rut + t.concepts).toLowerCase().includes(q.toLowerCase())),
   );
+  const LIMIT = 250;
+  const visible = rows.slice(0, LIMIT);
 
   return (
     <div className="content fade-up">
@@ -266,7 +268,7 @@ export function Pagos({
             </tr>
           </thead>
           <tbody>
-            {rows.map((t, i) => (
+            {visible.map((t, i) => (
               <tr key={i} onClick={() => onOpenTx(t)}>
                 <td style={{ whiteSpace: 'nowrap' }}>
                   {t.date.split(' ')[0]}
@@ -299,20 +301,10 @@ export function Pagos({
           </tbody>
         </table>
         <div className="tbl-foot">
-          <span>Mostrando {rows.length} de 248 transacciones</span>
-          <div className="pager">
-            <button>
-              <Icon name="chevL" size={15} />
-            </button>
-            <button className="on">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>…</button>
-            <button>25</button>
-            <button>
-              <Icon name="chevR" size={15} />
-            </button>
-          </div>
+          <span>
+            Mostrando {visible.length} de {rows.length} registros
+            {rows.length > LIMIT ? ' (usa el buscador o los filtros para acotar)' : ''}
+          </span>
         </div>
       </div>
 

@@ -6,6 +6,9 @@ Plataforam/.env.local
 # Claude settings
 .claude/
 
+# Fotos históricas descargadas del cPanel (pesado — uso local, no deploy)
+fotos-cepa-archivo/
+
 # OS
 .DS_Store
 Thumbs.db

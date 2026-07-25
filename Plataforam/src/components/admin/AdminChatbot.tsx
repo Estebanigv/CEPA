@@ -59,19 +59,31 @@ const TOPICS: Topic[] = [
 interface Message {
   from: 'bot' | 'user';
   html: string;
+  isHtml?: boolean; // true = respuesta predefinida (HTML de confianza); false = texto (IA/usuario)
+}
+
+/** Limpia marcadores markdown básicos para mostrar el texto de la IA como texto plano. */
+function toText(s: string): string {
+  return s.replace(/\*\*(.*?)\*\*/g, '$1').replace(/(?<!\*)\*(?!\*)(.*?)\*/g, '$1');
+}
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]*>/g, '');
 }
 
 export function AdminChatbot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [phase, setPhase] = useState<'menu' | 'answered'>('menu');
+  const [input, setInput] = useState('');
+  const [sending, setSending] = useState(false);
   const msgsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open && messages.length === 0) {
       setMessages([{
         from: 'bot',
-        html: '👋 Hola, soy el asistente del <strong>Panel CEPA</strong>. ¿En qué te puedo ayudar hoy?',
+        html: '👋 Hola, soy el asistente del <strong>Panel CEPA</strong>. Escríbeme tu pregunta o elige un tema.',
+        isHtml: true,
       }]);
       setPhase('menu');
     }
@@ -86,8 +98,8 @@ export function AdminChatbot() {
   function handleTopic(topic: Topic) {
     setMessages(prev => [
       ...prev,
-      { from: 'user', html: topic.label },
-      { from: 'bot', html: topic.answer },
+      { from: 'user', html: topic.label, isHtml: false },
+      { from: 'bot', html: topic.answer, isHtml: true },
     ]);
     setPhase('answered');
   }
@@ -95,9 +107,36 @@ export function AdminChatbot() {
   function goBack() {
     setMessages(prev => [
       ...prev,
-      { from: 'bot', html: '¿En qué más te puedo ayudar?' },
+      { from: 'bot', html: '¿En qué más te puedo ayudar?', isHtml: true },
     ]);
     setPhase('menu');
+  }
+
+  async function sendMessage() {
+    const q = input.trim();
+    if (!q || sending) return;
+    const next: Message[] = [...messages, { from: 'user', html: q, isHtml: false }];
+    setMessages(next);
+    setInput('');
+    setSending(true);
+    setPhase('answered');
+    const apiMessages = next
+      .filter(m => m.from === 'user' || m.isHtml === false)
+      .map(m => ({ role: m.from === 'user' ? 'user' : 'assistant', content: stripHtml(m.html) }));
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scope: 'admin', messages: apiMessages }),
+      });
+      const data = await res.json().catch(() => ({}));
+      const reply = data.ok ? toText(data.reply) : (data.error || 'No pude responder ahora.');
+      setMessages(prev => [...prev, { from: 'bot', html: reply, isHtml: false }]);
+    } catch {
+      setMessages(prev => [...prev, { from: 'bot', html: 'No me pude conectar. Intenta de nuevo.', isHtml: false }]);
+    } finally {
+      setSending(false);
+    }
   }
 
   const chips = phase === 'menu'
@@ -113,30 +152,28 @@ export function AdminChatbot() {
         title="Asistente del panel"
         style={{
           position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
-          width: 50, height: 50, borderRadius: '50%',
+          width: 66, height: 66, borderRadius: '50%',
           background: 'linear-gradient(135deg,#185FA5,#0C447C)',
-          color: '#fff', border: 'none', cursor: 'pointer',
+          color: '#fff', border: '3px solid #fff', cursor: 'pointer', padding: 0, overflow: 'hidden',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 18px rgba(24,95,165,.45)',
+          boxShadow: '0 6px 22px rgba(24,95,165,.5)',
           transition: 'transform .2s',
-          transform: open ? 'rotate(90deg)' : 'rotate(0)',
         }}
       >
         {open ? (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-          </svg>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src="/img/cepito-face.png" alt="Asistente Cepito" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         )}
       </button>
 
       {/* Chat panel */}
       <div onClick={e => e.stopPropagation()} style={{
-        position: 'fixed', bottom: 82, right: 24, zIndex: 9998,
-        width: 320, maxHeight: 480,
+        position: 'fixed', bottom: 98, right: 24, zIndex: 9998,
+        width: 380, maxHeight: 600,
         background: '#fff', borderRadius: 18,
         boxShadow: '0 16px 48px rgba(22,32,43,.18)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
@@ -153,13 +190,12 @@ export function AdminChatbot() {
           display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
         }}>
           <div style={{
-            width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,.18)',
+            width: 34, height: 34, borderRadius: '50%',
+            background: 'rgba(255,255,255,.18)', overflow: 'hidden',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
-              <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 8v4l3 3"/>
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/img/cepito-face.png" alt="Cepito" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <div>
             <div style={{ fontWeight: 700, fontSize: 13.5 }}>Asistente Admin</div>
@@ -169,19 +205,28 @@ export function AdminChatbot() {
 
         {/* Messages */}
         <div ref={msgsRef} style={{ flex: 1, overflowY: 'auto', padding: '14px 14px 8px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {messages.map((m, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start' }}>
-              <div
-                dangerouslySetInnerHTML={{ __html: m.html }}
-                style={{
-                  maxWidth: '86%', padding: '9px 13px', borderRadius: m.from === 'bot' ? '4px 14px 14px 14px' : '14px 4px 14px 14px',
-                  background: m.from === 'bot' ? 'var(--color-primary-50, #F2F8FD)' : 'var(--color-primary, #185FA5)',
-                  color: m.from === 'bot' ? 'var(--color-ink, #16202B)' : '#fff',
-                  fontSize: 13, lineHeight: 1.5, fontFamily: 'var(--sans)',
-                }}
-              />
+          {messages.map((m, i) => {
+            const bubbleStyle = {
+              maxWidth: '86%', padding: '9px 13px', borderRadius: m.from === 'bot' ? '4px 14px 14px 14px' : '14px 4px 14px 14px',
+              background: m.from === 'bot' ? 'var(--color-primary-50, #F2F8FD)' : 'var(--color-primary, #185FA5)',
+              color: m.from === 'bot' ? 'var(--color-ink, #16202B)' : '#fff',
+              fontSize: 13, lineHeight: 1.5, fontFamily: 'var(--sans)', whiteSpace: 'pre-wrap' as const,
+            };
+            return (
+              <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start' }}>
+                {m.isHtml
+                  ? <div dangerouslySetInnerHTML={{ __html: m.html }} style={bubbleStyle} />
+                  : <div style={bubbleStyle}>{m.html}</div>}
+              </div>
+            );
+          })}
+          {sending && (
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <div style={{ padding: '9px 13px', borderRadius: '4px 14px 14px 14px', background: 'var(--color-primary-50, #F2F8FD)', color: 'var(--color-muted, #8a93a2)', fontSize: 13 }}>
+                escribiendo…
+              </div>
             </div>
-          ))}
+          )}
         </div>
 
         {/* Chips */}
@@ -205,6 +250,38 @@ export function AdminChatbot() {
             </button>
           ))}
         </div>
+
+        {/* Input de texto libre (IA) */}
+        <form
+          onSubmit={e => { e.preventDefault(); sendMessage(); }}
+          style={{ display: 'flex', gap: 6, padding: '10px 12px', borderTop: '1px solid var(--color-line, #e8edf5)', flexShrink: 0 }}
+        >
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="Escribe tu pregunta…"
+            disabled={sending}
+            style={{
+              flex: 1, border: '1.5px solid var(--color-line, #e3e6ec)', borderRadius: 999,
+              padding: '8px 14px', fontSize: 13, fontFamily: 'var(--sans)', outline: 'none',
+            }}
+          />
+          <button
+            type="submit"
+            disabled={sending || !input.trim()}
+            aria-label="Enviar"
+            style={{
+              width: 36, height: 36, borderRadius: '50%', flexShrink: 0, border: 'none',
+              background: 'linear-gradient(135deg,#185FA5,#0C447C)', color: '#fff',
+              cursor: sending || !input.trim() ? 'default' : 'pointer', opacity: sending || !input.trim() ? .5 : 1,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </form>
       </div>
     </>
   );

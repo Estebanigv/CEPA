@@ -1,13 +1,16 @@
 /* CEPA · Login del portal apoderado.
  *
- * Busca la familia por RUT (o correo, mientras no haya RUT cargado) y setea
- * una cookie httpOnly con su id. La contraseña aún no se valida contra nada
- * (no hay credenciales en la base del Centro de Padres): es el próximo
- * milestone (Supabase Auth). Por ahora basta identificar a la familia.
+ * Por ahora los apoderados entran con su CORREO (que sí está en la base) y una
+ * contraseña única temporal (PORTAL_PASSWORD, por defecto "12334"). El RUT
+ * también sirve como identificador cuando se carguen. El próximo milestone es
+ * Supabase Auth con contraseña individual por apoderado.
  */
 import { NextResponse } from 'next/server';
 import { findFamilyByIdentifier } from '@/lib/portal-server-data';
 import { setPortalCookie } from '@/lib/portal-auth';
+
+/** Contraseña única temporal para todos los apoderados (configurable por entorno). */
+const PORTAL_PASSWORD = process.env.PORTAL_PASSWORD ?? '12334';
 
 export async function POST(req: Request) {
   let rut = '';
@@ -21,13 +24,17 @@ export async function POST(req: Request) {
   }
 
   if (!rut || !pwd) {
-    return NextResponse.json({ ok: false, error: 'Ingresa tu RUT y contraseña.' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: 'Ingresa tu correo y contraseña.' }, { status: 400 });
+  }
+
+  if (pwd !== PORTAL_PASSWORD) {
+    return NextResponse.json({ ok: false, error: 'Contraseña incorrecta.' }, { status: 401 });
   }
 
   const fam = await findFamilyByIdentifier(rut);
   if (!fam) {
     return NextResponse.json(
-      { ok: false, error: 'No encontramos una familia con ese RUT o correo.' },
+      { ok: false, error: 'No encontramos una familia con ese correo o RUT.' },
       { status: 404 },
     );
   }

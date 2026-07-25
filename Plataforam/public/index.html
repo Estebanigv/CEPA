@@ -24,8 +24,10 @@
 <meta name="twitter:image" content="https://www.cepaciamaria.cl/assets/logo.png" />
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" href="assets/logo.png" />
-<link rel="apple-touch-icon" href="assets/logo.png" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -109,10 +111,10 @@
   }
   .hero__chip svg { width:16px; height:16px; color:var(--color-pay); }
   .hero__float {
-    position:absolute; left:-26px; bottom:26px;
+    position:absolute; right:-16px; bottom:-16px; left:auto;
     background:#fff; color:var(--color-ink);
     border-radius: var(--radius-md); box-shadow: var(--shadow-deep);
-    padding: 1.1rem 1.25rem; width: min(258px, 72%);
+    padding: .9rem 1.1rem; width: min(228px, 64%);
     border:1px solid var(--color-line);
   }
   .hero__float .lbl { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--color-muted); font-weight:600; }
@@ -129,6 +131,17 @@
     .hero__float { left:auto; right:14px; width:220px; }
     .hero__chip { left:6px; }
   }
+
+  /* ============ CARRUSEL ============ */
+  .cepa-carousel { position:relative; }
+  .cepa-slide {
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transition: opacity .9s ease; }
+  .cepa-slide.is-active { opacity:1; }
+  .cepa-dots { position:absolute; left:0; right:0; bottom:12px; display:flex; gap:7px; justify-content:center; z-index:2; }
+  .cepa-dot { width:8px; height:8px; border-radius:50%; border:none; padding:0; cursor:pointer;
+    background:rgba(255,255,255,.5); transition: background .2s, transform .2s; }
+  .cepa-dot.is-active { background:#fff; transform:scale(1.25); }
 
   /* ============ QUICK LINKS ============ */
   .quick { margin-top: -3rem; position: relative; z-index:5; }
@@ -361,10 +374,6 @@
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
         Transporte Escolar
       </a>
-      <a href="#" class="drawer__item">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-        Economía Circular
-      </a>
     </div>
 
     <div class="drawer__section">
@@ -416,13 +425,12 @@
         </div>
         <div class="hero__trust" data-up>
           <span class="dot"></span>
-          <span>Cuota anual familia 2026: <b>$50.000</b> · hasta 3 cuotas precio contado vía Web&nbsp;Pay</span>
+          <span>Cuota anual familia 2026: <b>$50.000</b> · hasta 12 cuotas precio contado vía Web&nbsp;Pay</span>
         </div>
       </div>
       <div class="hero__media">
-        <div class="ph ph--dark">
-          <span class="ph__label">Foto · comunidad escolar</span>
-        </div>
+        <img src="img/home/hero-comunidad.jpg" alt="Familias y comunidad del CEPA celebrando juntas"
+             style="width:100%;aspect-ratio:4/4.5;object-fit:cover;border-radius:var(--radius-lg);box-shadow:0 30px 70px rgba(8,14,28,.45);display:block;" />
         <div class="hero__float">
           <span class="lbl">Cuota CEPA 2026</span>
           <span class="amt">$50.000</span>
@@ -490,8 +498,29 @@
         <a href="cuota-cepa.html" class="btn btn--primary">Conoce la Cuota CEPA</a>
       </div>
       <div class="valor__media" data-reveal data-reveal-delay="120">
-        <div class="ph"><span class="ph__label">Foto · familias / actividad CEPA</span></div>
+        <div class="cepa-carousel" data-carousel data-interval="3500"
+             style="aspect-ratio:5/5.6;border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 20px 50px rgba(8,14,28,.18);">
+          <img class="cepa-slide is-active" src="img/home/car-1.jpg" alt="Comunidad y deportes CEPA" />
+          <img class="cepa-slide" src="img/home/car-2.jpg" alt="Equipo de fútbol CEPA" loading="lazy" />
+          <img class="cepa-slide" src="img/home/car-3.jpg" alt="Celebración de la comunidad CEPA" loading="lazy" />
+          <img class="cepa-slide" src="img/home/car-4.jpg" alt="Actividades y familias CEPA" loading="lazy" />
+          <img class="cepa-slide" src="img/home/hero-copa-cepa.jpg" alt="Copa CEPA 2026" loading="lazy" />
+          <div class="cepa-dots"></div>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ DIRECTIVA 2026 ============ -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head" data-reveal style="margin-bottom:1.4rem;">
+        <p class="eyebrow">Quiénes somos</p>
+        <h2>Nuestra Directiva 2026</h2>
+        <p>El equipo de apoderados que trabaja voluntariamente por la comunidad del Colegio Compañía de María Apoquindo.</p>
+      </div>
+      <img src="img/home/equipo-directiva.jpg" alt="Directiva CEPA 2026" data-reveal
+           style="width:100%;border-radius:var(--radius-lg);box-shadow:0 20px 50px rgba(8,14,28,.18);display:block;" />
     </div>
   </section>
 
@@ -527,11 +556,6 @@
         <a href="#" class="card card--hover area" data-reveal>
           <span class="area__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg></span>
           <h3>Inversiones</h3><p>Uso transparente y responsable de los recursos de la comunidad.</p>
-          <span class="area__link">Ver más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </a>
-        <a href="#" class="card card--hover area" data-reveal data-reveal-delay="60">
-          <span class="area__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8a3 3 0 00-3-3H6a3 3 0 100 6h12a3 3 0 013 3 3 3 0 01-3 3H6a3 3 0 01-3-3"/></svg></span>
-          <h3>Economía Circular</h3><p>Uniformes reciclados y marketplace entre familias del colegio.</p>
           <span class="area__link">Ver más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </a>
         <a href="#" class="card card--hover area" data-reveal data-reveal-delay="120">
@@ -579,7 +603,7 @@
       </div>
       <div class="news__grid">
         <a href="noticia.html" class="card card--hover news__card" data-reveal>
-          <div class="ph news__img"><span class="ph__label">Foto noticia</span></div>
+          <img class="news__img" src="img/home/noticia-1.jpg" alt="Bienvenida a las familias nuevas 2026" style="width:100%;object-fit:cover;display:block;" loading="lazy" />
           <div class="news__body">
             <span class="news__date">15 de marzo, 2026</span>
             <h3>Bienvenida a las familias nuevas 2026</h3>
@@ -588,7 +612,7 @@
           </div>
         </a>
         <a href="noticia.html" class="card card--hover news__card" data-reveal data-reveal-delay="80">
-          <div class="ph news__img"><span class="ph__label">Foto noticia</span></div>
+          <img class="news__img" src="img/home/noticia-2.jpg" alt="Campaña solidaria de otoño" style="width:100%;object-fit:cover;display:block;" loading="lazy" />
           <div class="news__body">
             <span class="news__date">28 de abril, 2026</span>
             <h3>Campaña solidaria de otoño en marcha</h3>
@@ -597,7 +621,7 @@
           </div>
         </a>
         <a href="noticia.html" class="card card--hover news__card" data-reveal data-reveal-delay="160">
-          <div class="ph news__img"><span class="ph__label">Foto noticia</span></div>
+          <img class="news__img" src="img/home/noticia-3.jpg" alt="Feria de Economía Circular de uniformes" style="width:100%;object-fit:cover;display:block;" loading="lazy" />
           <div class="news__body">
             <span class="news__date">10 de mayo, 2026</span>
             <h3>Feria de Economía Circular de uniformes</h3>
@@ -621,8 +645,9 @@
         </div>
         <div class="solidario__media">
           <div class="solidario__badge">
-            <div class="ph"><span class="ph__label">Logo campaña</span></div>
-            <p style="margin:1rem 0 0; font-size:.86rem; color:#f1dadd;">Campañas vigentes <span class="tbd" style="color:#f0d98c; background:rgba(255,255,255,.12);">[completar]</span></p>
+            <img src="img/home/solidaria.jpg" alt="Actividades solidarias de la comunidad CEPA"
+                 style="width:100%;aspect-ratio:5/4;object-fit:cover;border-radius:var(--radius-md);display:block;" loading="lazy" />
+            <p style="margin:1rem 0 0; font-size:.86rem; color:#f1dadd;">Junto a las familias del Colegio Compañía de María Apoquindo.</p>
           </div>
         </div>
       </div>
@@ -637,7 +662,7 @@
         <div>
           <p class="eyebrow hero__eyebrow">Pago en línea</p>
           <h2>Paga tu Cuota CEPA 2026 en minutos</h2>
-          <p>Web Pay, hasta 3 cuotas precio contado o transferencia. Rápido, seguro y con comprobante inmediato.</p>
+          <p>Web Pay, hasta 12 cuotas precio contado o transferencia. Rápido, seguro y con comprobante inmediato.</p>
         </div>
         <a href="/portal/login" class="btn btn--pay btn--lg">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
@@ -702,6 +727,40 @@
   </div>
 </footer>
 
+<script>
+/* Carrusel del home: auto-rota y se pausa al pasar el mouse */
+(function () {
+  document.querySelectorAll('[data-carousel]').forEach(function (car) {
+    var slides = car.querySelectorAll('.cepa-slide');
+    if (slides.length < 2) return;
+    var dotsWrap = car.querySelector('.cepa-dots');
+    var i = 0, timer = null, dots = [];
+    var interval = parseInt(car.getAttribute('data-interval'), 10) || 3500;
+    if (dotsWrap) {
+      slides.forEach(function (_, idx) {
+        var d = document.createElement('button');
+        d.className = 'cepa-dot' + (idx === 0 ? ' is-active' : '');
+        d.type = 'button';
+        d.setAttribute('aria-label', 'Ir a la imagen ' + (idx + 1));
+        d.addEventListener('click', function () { go(idx); reset(); });
+        dotsWrap.appendChild(d); dots.push(d);
+      });
+    }
+    function go(n) {
+      slides[i].classList.remove('is-active'); if (dots[i]) dots[i].classList.remove('is-active');
+      i = (n + slides.length) % slides.length;
+      slides[i].classList.add('is-active'); if (dots[i]) dots[i].classList.add('is-active');
+    }
+    function next() { go(i + 1); }
+    function start() { if (!timer) timer = setInterval(next, interval); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function reset() { stop(); start(); }
+    car.addEventListener('mouseenter', stop);
+    car.addEventListener('mouseleave', start);
+    start();
+  });
+})();
+</script>
 <script src="assets/cepa.js"></script>
 <script src="assets/chatbot.js" defer></script>
 </body>

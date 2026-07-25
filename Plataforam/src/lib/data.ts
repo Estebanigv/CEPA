@@ -26,15 +26,15 @@ import { createAdminClient, isSupabaseConfigured } from './supabase/admin';
 
 /* ---- Conceptos (catálogo configurable) ---- */
 export const CONCEPTS: Concept[] = [
-  { id: 'cepa', name: 'Cuota Centro de Padres', cat: 'Cuotas institucionales', icon: 'building', amount: 50000, scope: 'Por familia', vig: 'Anual 2026', cuotas: 3, active: true },
-  { id: 'beca', name: 'Cuota Beca de Fallecimiento', cat: 'Cuotas institucionales', icon: 'heart', amount: 12000, scope: 'Por familia', vig: 'Anual 2026', cuotas: 1, active: true },
-  { id: 'futm1', name: 'Fútbol Masculino — 1er Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '1er semestre', cuotas: 1, active: true },
-  { id: 'futm2', name: 'Fútbol Masculino — 2do Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '2do semestre', cuotas: 1, active: true },
-  { id: 'futf1', name: 'Fútbol Femenino — 1er Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '1er semestre', cuotas: 1, active: true },
-  { id: 'futf2', name: 'Fútbol Femenino — 2do Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '2do semestre', cuotas: 1, active: false },
-  { id: 'entrena', name: 'Cuota Entrenamiento', cat: 'Deportes', icon: 'run', amount: 25000, scope: 'Por estudiante', vig: 'Mensual', cuotas: 1, active: true },
-  { id: 'zumba', name: 'Cuota Zumba', cat: 'Deportes', icon: 'music', amount: 20000, scope: 'Por persona', vig: 'Mensual', cuotas: 1, active: true },
-  { id: 'corrida', name: 'Corrida Familiar CEPA', cat: 'Eventos', icon: 'run', amount: 15000, scope: 'Por persona', vig: 'Evento único', cuotas: 1, active: true },
+  { id: 'cepa', name: 'Cuota Centro de Padres', cat: 'Cuotas institucionales', icon: 'building', amount: 50000, scope: 'Por familia', vig: 'Anual 2026', cuotas: 12, active: true },
+  { id: 'beca', name: 'Cuota Beca de Fallecimiento', cat: 'Cuotas institucionales', icon: 'heart', amount: 12000, scope: 'Por familia', vig: 'Anual 2026', cuotas: 12, active: true },
+  { id: 'futm1', name: 'Fútbol Masculino — 1er Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '1er semestre', cuotas: 12, active: true },
+  { id: 'futm2', name: 'Fútbol Masculino — 2do Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '2do semestre', cuotas: 12, active: true },
+  { id: 'futf1', name: 'Fútbol Femenino — 1er Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '1er semestre', cuotas: 12, active: true },
+  { id: 'futf2', name: 'Fútbol Femenino — 2do Semestre', cat: 'Deportes', icon: 'ball', amount: 45000, scope: 'Por estudiante', vig: '2do semestre', cuotas: 12, active: false },
+  { id: 'entrena', name: 'Cuota Entrenamiento', cat: 'Deportes', icon: 'run', amount: 25000, scope: 'Por estudiante', vig: 'Mensual', cuotas: 12, active: true },
+  { id: 'zumba', name: 'Cuota Zumba', cat: 'Deportes', icon: 'music', amount: 20000, scope: 'Por persona', vig: 'Mensual', cuotas: 12, active: true },
+  { id: 'corrida', name: 'Corrida Familiar CEPA', cat: 'Eventos', icon: 'run', amount: 15000, scope: 'Por persona', vig: 'Evento único', cuotas: 12, active: true },
 ];
 
 /* ---- Recaudación por mes (placeholder) ---- */
@@ -123,9 +123,10 @@ type FamilyRow = {
   historial: Record<string, unknown> | null;
 };
 
-/* Monto nominal de referencia por cuota (el Excel no registra montos reales). */
+/* Montos reales de las dos cuotas anuales.
+   CEPA = cuota Centro de Padres; SEGURO (col del Excel) = Beca de Fallecimiento. */
 const CEPA_AMOUNT = 50000;
-const SEGURO_AMOUNT = 8000;
+const SEGURO_AMOUNT = 30000;
 
 /** KPIs de cobertura calculados desde las familias reales. */
 function computeKpis(rows: FamilyRow[]): Kpis {
@@ -146,13 +147,39 @@ function computeKpis(rows: FamilyRow[]): Kpis {
   };
 }
 
-/** Recaudación (nominal) por concepto — CEPA vs Seguro, según cobertura 2026. */
+/** Deriva las transacciones 2026 desde el pago real de cada familia:
+    una fila por cuota CEPA ($50.000) y una por Beca de Fallecimiento ($30.000),
+    con estado pagado/pendiente según el registro (SI/folio = pagado). */
+function computeTransactions(rows: FamilyRow[]): Transaction[] {
+  const txs: Transaction[] = [];
+  for (const f of rows) {
+    const base = { name: f.apoderado, rut: f.rut ?? '—', curso: f.cursos ?? '', date: '2026', method: 'Transferencia' };
+    txs.push({
+      ...base,
+      id: f.cepa_2026 ? (f.cepa_folio_2026 ? `Folio ${f.cepa_folio_2026}` : 'CEPA') : '—',
+      concepts: 'Cuota Centro de Padres 2026',
+      amount: CEPA_AMOUNT,
+      status: f.cepa_2026 ? 'paid' : 'pending',
+    });
+    txs.push({
+      ...base,
+      id: f.seguro_2026 ? (f.seguro_folio_2026 ? `Folio ${f.seguro_folio_2026}` : 'BECA') : '—',
+      concepts: 'Beca de Fallecimiento 2026',
+      amount: SEGURO_AMOUNT,
+      status: f.seguro_2026 ? 'paid' : 'pending',
+    });
+  }
+  // primero los pagados (con folio), luego los pendientes
+  return txs.sort((a, b) => (a.status === b.status ? 0 : a.status === 'paid' ? -1 : 1));
+}
+
+/** Recaudación por concepto — CEPA vs Beca de Fallecimiento, según cobertura 2026. */
 function computeByConcept(rows: FamilyRow[]): ConceptShare[] {
   const cepaOk = rows.filter((f) => f.cepa_2026).length;
   const segOk = rows.filter((f) => f.seguro_2026).length;
   return [
     { name: 'Cuota Centro de Padres', v: cepaOk * CEPA_AMOUNT, color: '#185FA5' },
-    { name: 'Seguro Escolar', v: segOk * SEGURO_AMOUNT, color: '#1D9E75' },
+    { name: 'Beca de Fallecimiento', v: segOk * SEGURO_AMOUNT, color: '#1D9E75' },
   ];
 }
 
@@ -188,19 +215,21 @@ async function fetchFromSupabase(): Promise<AdminData> {
     byConcept: (byConcept.data ?? []).length > 0
       ? (byConcept.data ?? []).map((c): ConceptShare => ({ name: c.name, v: c.value, color: c.color }))
       : realByConcept,
-    transactions: (transactions.data ?? []).map(
-      (t): Transaction => ({
-        id: t.reference ?? '—',
-        date: t.date_label,
-        name: t.apoderado,
-        rut: t.rut,
-        curso: t.curso,
-        concepts: t.concepts,
-        amount: t.amount,
-        method: t.method,
-        status: t.status,
-      }),
-    ),
+    transactions: (transactions.data ?? []).length > 0
+      ? (transactions.data ?? []).map(
+          (t): Transaction => ({
+            id: t.reference ?? '—',
+            date: t.date_label,
+            name: t.apoderado,
+            rut: t.rut,
+            curso: t.curso,
+            concepts: t.concepts,
+            amount: t.amount,
+            method: t.method,
+            status: t.status,
+          }),
+        )
+      : computeTransactions(familyRows),
     methods: METHODS,
     families: familyRows.map(
       (f): Family => ({

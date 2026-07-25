@@ -92,7 +92,7 @@ function FamilyDrawer({
         <div className="drawer-b">
           <div className="grid-2" style={{ marginBottom: 4 }}>
             <CuotaCard label="CEPA" paid={fam.cepa2026} folio={fam.cepaFolio2026} />
-            <CuotaCard label="Seguro" paid={fam.seguro2026} folio={fam.seguroFolio2026} />
+            <CuotaCard label="Beca Fallec." paid={fam.seguro2026} folio={fam.seguroFolio2026} />
           </div>
 
           <div className="sec-label">Apoderados</div>
@@ -133,12 +133,12 @@ function FamilyDrawer({
             </div>
           ))}
 
-          <div className="sec-label">Historial anual (CEPA / Seguro)</div>
+          <div className="sec-label">Historial anual (CEPA / Beca)</div>
           {years.length ? (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: '2px 14px', alignItems: 'center', padding: '2px 8px' }}>
               <span className="muted" style={{ fontSize: 11, fontWeight: 700 }}>Año</span>
               <span className="muted" style={{ fontSize: 11, fontWeight: 700, textAlign: 'center' }}>CEPA</span>
-              <span className="muted" style={{ fontSize: 11, fontWeight: 700, textAlign: 'center' }}>Seguro</span>
+              <span className="muted" style={{ fontSize: 11, fontWeight: 700, textAlign: 'center' }}>Beca</span>
               {years.map((y) => {
                 const h = fam.historial![y];
                 return (
@@ -153,9 +153,9 @@ function FamilyDrawer({
           )}
         </div>
         <div className="drawer-f">
-          <button className="btn btn--ghost btn--block" onClick={onClose}>
-            Cerrar
-          </button>
+          <a className="btn btn--ghost btn--block" href={`/portal/mis-datos?fid=${fam.id}`} target="_blank" rel="noopener" style={{ textDecoration: 'none' }}>
+            <Icon name="eye" size={16} /> Ver como apoderado
+          </a>
           <button className="btn btn--primary btn--block" onClick={() => onRemind(fam)}>
             <Icon name="bell" size={16} /> Enviar recordatorio
           </button>
@@ -172,16 +172,61 @@ const FAM_TABS: [FamilyStatus | 'todos', string][] = [
   ['overdue', 'Con vencidos'],
 ];
 
+/** Rango pedagógico del primer curso de la familia: PG < PK < K < 1°–8° < I–IV Medio. */
+const CURSO_BASE: Record<string, number> = { PG: 0, PK: 1, K: 2 };
+function cursoRank(cursos: string): number {
+  const first = (cursos || '').split('·')[0].trim().toUpperCase();
+  if (!first) return 9999;
+  const base = first.split('-')[0].trim();
+  if (base in CURSO_BASE) return CURSO_BASE[base];
+  const em = base.match(/^(\d+)EM$/);
+  if (em) return 100 + Number(em[1]);
+  const bas = base.match(/^(\d+)$/);
+  if (bas) return 10 + Number(bas[1]);
+  return 9999;
+}
+
+type SortKey = 'apoderado' | 'curso' | 'status' | 'aportado' | 'pend';
+
 export function Familias({ data, onToast }: { data: AdminData; onToast: (msg: string) => void }) {
   const [status, setStatus] = useState<FamilyStatus | 'todos'>('todos');
   const [q, setQ] = useState('');
+  const [curso, setCurso] = useState('todos');
   const [open, setOpen] = useState<Family | null>(null);
+  const [sort, setSort] = useState<{ key: SortKey; dir: 'asc' | 'desc' }>({ key: 'curso', dir: 'asc' });
+
+  const toggleSort = (key: SortKey) =>
+    setSort((s) => (s.key === key ? { key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' }));
+
+  /** Lista de cursos únicos (ordenados pedagógicamente) para el filtro. */
+  const cursoOptions = (() => {
+    const set = new Set<string>();
+    data.families.forEach((f) => (f.cursos ?? '').split('·').forEach((c) => { const t = c.trim(); if (t) set.add(t); }));
+    return Array.from(set).sort((a, b) => (cursoRank(a) - cursoRank(b)) || a.localeCompare(b, 'es', { numeric: true }));
+  })();
 
   const rows = data.families.filter(
     (f) =>
       (status === 'todos' || f.status === status) &&
-      (q === '' || (f.name + f.rut + f.apoderado).toLowerCase().includes(q.toLowerCase())),
+      (curso === 'todos' || (f.cursos ?? '').split('·').map((s) => s.trim()).includes(curso)) &&
+      (q === '' || (f.name + f.rut + f.apoderado + (f.cursos ?? '')).toLowerCase().includes(q.toLowerCase())),
   );
+
+  const dir = sort.dir === 'asc' ? 1 : -1;
+  const sorted = [...rows].sort((a, b) => {
+    if (sort.key === 'aportado') return (a.aportado - b.aportado) * dir;
+    if (sort.key === 'pend') return (a.pend - b.pend) * dir;
+    if (sort.key === 'curso') {
+      const r = cursoRank(a.cursos) - cursoRank(b.cursos);
+      return (r !== 0 ? r : (a.cursos ?? '').localeCompare(b.cursos ?? '', 'es', { numeric: true })) * dir;
+    }
+    const av = sort.key === 'status' ? a.status : a.apoderado;
+    const bv = sort.key === 'status' ? b.status : b.apoderado;
+    return av.localeCompare(bv, 'es', { numeric: true }) * dir;
+  });
+
+  const Arrow = ({ k }: { k: SortKey }) =>
+    sort.key === k ? <span style={{ fontSize: 10, marginLeft: 3 }}>{sort.dir === 'asc' ? '▲' : '▼'}</span> : null;
 
   return (
     <div className="content fade-up">
@@ -194,6 +239,15 @@ export function Familias({ data, onToast }: { data: AdminData; onToast: (msg: st
           ))}
         </div>
         <div className="spacer"></div>
+        <div className="fselect">
+          <Icon name="filter" size={15} />
+          <select value={curso} onChange={(e) => setCurso(e.target.value)}>
+            <option value="todos">Todos los cursos</option>
+            {cursoOptions.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
         <div className="search">
           <Icon name="search" size={17} />
           <input
@@ -212,16 +266,16 @@ export function Familias({ data, onToast }: { data: AdminData; onToast: (msg: st
         <table className="tbl">
           <thead>
             <tr>
-              <th>Familia</th>
-              <th>Curso(s)</th>
-              <th>Estado</th>
-              <th className="t-r">Aportado</th>
-              <th className="t-r">Pendiente</th>
+              <th style={{ cursor: 'pointer' }} onClick={() => toggleSort('apoderado')}>Familia<Arrow k="apoderado" /></th>
+              <th style={{ cursor: 'pointer' }} onClick={() => toggleSort('curso')}>Curso(s)<Arrow k="curso" /></th>
+              <th style={{ cursor: 'pointer' }} onClick={() => toggleSort('status')}>Estado<Arrow k="status" /></th>
+              <th className="t-r" style={{ cursor: 'pointer' }} onClick={() => toggleSort('aportado')}>Aportado<Arrow k="aportado" /></th>
+              <th className="t-r" style={{ cursor: 'pointer' }} onClick={() => toggleSort('pend')}>Pendiente<Arrow k="pend" /></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((f) => (
+            {sorted.map((f) => (
               <tr key={f.id} onClick={() => setOpen(f)}>
                 <td>
                   <span className="av-sm">{initials(f.apoderado)}</span>
@@ -248,7 +302,7 @@ export function Familias({ data, onToast }: { data: AdminData; onToast: (msg: st
           </tbody>
         </table>
         <div className="tbl-foot">
-          <span>{rows.length} familias</span>
+          <span>{sorted.length} familias · ordenadas por {sort.key === 'apoderado' ? 'familia' : sort.key === 'curso' ? 'curso' : sort.key === 'status' ? 'estado' : sort.key}</span>
         </div>
       </div>
       {open && (

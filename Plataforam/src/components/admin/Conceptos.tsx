@@ -5,16 +5,47 @@ import { Icon } from './Icon';
 import { clp } from '@/lib/format';
 import type { Concept } from '@/lib/types';
 
-function ConceptModal({ concept, onClose }: { concept?: Concept; onClose: () => void }) {
-  const c = concept ?? {
-    name: '',
-    cat: 'Cuotas institucionales',
-    amount: 0,
-    scope: 'Por familia',
-    vig: 'Anual 2026',
-    cuotas: 1,
-    active: true,
+function ConceptModal({
+  concept,
+  onClose,
+  onSaved,
+}: {
+  concept?: Concept;
+  onClose: () => void;
+  onSaved: (c: Concept) => void;
+}) {
+  const base: Concept = concept ?? {
+    id: '', name: '', cat: 'Cuotas institucionales', icon: 'tag',
+    amount: 0, scope: 'Por familia', vig: 'Anual 2026', cuotas: 1, active: true,
   };
+  const [name, setName] = useState(base.name);
+  const [cat, setCat] = useState(base.cat);
+  const [amount, setAmount] = useState(base.amount ? clp(base.amount) : '');
+  const [scope, setScope] = useState(base.scope);
+  const [vig, setVig] = useState(base.vig);
+  const [cuotas, setCuotas] = useState(base.cuotas);
+  const [active, setActive] = useState(base.active);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState('');
+
+  async function save() {
+    if (!name.trim()) { setErr('Ingresa el nombre del concepto.'); return; }
+    setSaving(true); setErr('');
+    const amountNum = parseInt(String(amount).replace(/[^0-9]/g, ''), 10) || 0;
+    try {
+      const res = await fetch('/api/admin/concepts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: concept?.id || undefined, name, cat, amount: amountNum, scope, vig, cuotas, active, icon: base.icon }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) { onSaved(data.concept); }
+      else { setErr(data.error || 'No se pudo guardar.'); setSaving(false); }
+    } catch {
+      setErr('Error de conexión. Intenta de nuevo.'); setSaving(false);
+    }
+  }
+
   return (
     <div className="modal-wrap">
       <div className="scrim" onClick={onClose}></div>
@@ -29,12 +60,12 @@ function ConceptModal({ concept, onClose }: { concept?: Concept; onClose: () => 
           <div style={{ display: 'grid', gap: 14 }}>
             <div>
               <label className="field-l">Nombre del concepto</label>
-              <input className="input" defaultValue={c.name} placeholder="Ej. Cuota Centro de Padres" />
+              <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ej. Cuota Centro de Padres" />
             </div>
             <div className="grid-2">
               <div>
                 <label className="field-l">Categoría</label>
-                <select className="select" defaultValue={c.cat}>
+                <select className="select" value={cat} onChange={(e) => setCat(e.target.value)}>
                   <option>Cuotas institucionales</option>
                   <option>Deportes</option>
                   <option>Eventos</option>
@@ -42,13 +73,13 @@ function ConceptModal({ concept, onClose }: { concept?: Concept; onClose: () => 
               </div>
               <div>
                 <label className="field-l">Monto (CLP)</label>
-                <input className="input" defaultValue={c.amount ? clp(c.amount) : ''} placeholder="$50.000" />
+                <input className="input" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$50.000" />
               </div>
             </div>
             <div className="grid-2">
               <div>
                 <label className="field-l">Aplica a</label>
-                <select className="select" defaultValue={c.scope}>
+                <select className="select" value={scope} onChange={(e) => setScope(e.target.value)}>
                   <option>Por familia</option>
                   <option>Por estudiante</option>
                   <option>Por persona</option>
@@ -57,7 +88,7 @@ function ConceptModal({ concept, onClose }: { concept?: Concept; onClose: () => 
               </div>
               <div>
                 <label className="field-l">Vigencia</label>
-                <select className="select" defaultValue={c.vig}>
+                <select className="select" value={vig} onChange={(e) => setVig(e.target.value)}>
                   <option>Anual 2026</option>
                   <option>1er semestre</option>
                   <option>2do semestre</option>
@@ -69,27 +100,32 @@ function ConceptModal({ concept, onClose }: { concept?: Concept; onClose: () => 
             <div className="grid-2">
               <div>
                 <label className="field-l">N° de cuotas (precio contado)</label>
-                <input className="input" defaultValue={c.cuotas} type="number" min="1" max="12" />
+                <input
+                  className="input" type="number" min={1} max={12} value={cuotas}
+                  onChange={(e) => setCuotas(Math.min(12, Math.max(1, Number(e.target.value) || 1)))}
+                />
               </div>
               <div>
                 <label className="field-l">Estado</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, height: 42 }}>
-                  <span className={'switch' + (c.active ? ' switch--on' : '')}></span>
-                  <span style={{ fontSize: 13.5, fontWeight: 600 }}>{c.active ? 'Activo' : 'Inactivo'}</span>
+                  <button type="button" className={'switch' + (active ? ' switch--on' : '')} onClick={() => setActive((v) => !v)}></button>
+                  <span style={{ fontSize: 13.5, fontWeight: 600 }}>{active ? 'Activo' : 'Inactivo'}</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="placeholder-note" style={{ marginTop: 16 }}>
-            · montos de ejemplo — placeholder, los confirma el CEPA ·
-          </div>
+          {err && (
+            <div style={{ marginTop: 14, background: 'rgba(179,38,30,.08)', border: '1px solid rgba(179,38,30,.25)', borderRadius: 8, padding: '9px 13px', fontSize: 13, color: '#b3261e' }}>
+              {err}
+            </div>
+          )}
         </div>
         <div className="modal-f">
-          <button className="btn btn--ghost" onClick={onClose}>
+          <button className="btn btn--ghost" onClick={onClose} disabled={saving}>
             Cancelar
           </button>
-          <button className="btn btn--primary" onClick={onClose}>
-            <Icon name="check" size={16} /> Guardar concepto
+          <button className="btn btn--primary" onClick={save} disabled={saving}>
+            <Icon name="check" size={16} /> {saving ? 'Guardando…' : 'Guardar concepto'}
           </button>
         </div>
       </div>
@@ -97,12 +133,34 @@ function ConceptModal({ concept, onClose }: { concept?: Concept; onClose: () => 
   );
 }
 
+async function saveConcept(c: Concept) {
+  try {
+    await fetch('/api/admin/concepts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: c.id, name: c.name, cat: c.cat, amount: c.amount, scope: c.scope, vig: c.vig, cuotas: c.cuotas, active: c.active, icon: c.icon }),
+    });
+  } catch {
+    /* el estado local ya se actualizó de forma optimista */
+  }
+}
+
 export function Conceptos({ concepts }: { concepts: Concept[] }) {
   const [items, setItems] = useState<Concept[]>(concepts);
   const [edit, setEdit] = useState<Concept | null>(null);
   const [creating, setCreating] = useState(false);
-  const toggle = (id: string) =>
-    setItems((its) => its.map((c) => (c.id === id ? { ...c, active: !c.active } : c)));
+
+  const toggle = (c: Concept) => {
+    const updated = { ...c, active: !c.active };
+    setItems((its) => its.map((x) => (x.id === c.id ? updated : x)));
+    saveConcept(updated); // persiste el cambio de estado
+  };
+
+  const onSaved = (saved: Concept) => {
+    setItems((its) => (its.some((x) => x.id === saved.id) ? its.map((x) => (x.id === saved.id ? saved : x)) : [...its, saved]));
+    setEdit(null);
+    setCreating(false);
+  };
 
   return (
     <div className="content fade-up">
@@ -149,7 +207,7 @@ export function Conceptos({ concepts }: { concepts: Concept[] }) {
                 <td className="t-amt">{clp(c.amount)}</td>
                 <td className="muted">{c.cuotas > 1 ? 'Hasta ' + c.cuotas : '1'}</td>
                 <td>
-                  <button className={'switch' + (c.active ? ' switch--on' : '')} onClick={() => toggle(c.id)}></button>
+                  <button className={'switch' + (c.active ? ' switch--on' : '')} onClick={() => toggle(c)}></button>
                 </td>
                 <td className="t-r">
                   <button className="btn btn--ghost btn--icon btn--sm" onClick={() => setEdit(c)}>
@@ -161,8 +219,8 @@ export function Conceptos({ concepts }: { concepts: Concept[] }) {
           </tbody>
         </table>
       </div>
-      {edit && <ConceptModal concept={edit} onClose={() => setEdit(null)} />}
-      {creating && <ConceptModal onClose={() => setCreating(false)} />}
+      {edit && <ConceptModal concept={edit} onClose={() => setEdit(null)} onSaved={onSaved} />}
+      {creating && <ConceptModal onClose={() => setCreating(false)} onSaved={onSaved} />}
     </div>
   );
 }

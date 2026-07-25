@@ -5,6 +5,15 @@
 (function () {
   'use strict';
 
+  /* ---- Config ----
+     URL del backend Next.js (donde vive /api/chat).
+     '' = mismo origen (si el sitio y la plataforma comparten dominio).
+     Si están en dominios distintos, pon aquí la URL de Vercel, ej:
+     var CEPA_API_BASE = 'https://cepa-plataforma.vercel.app'; */
+  var CEPA_API_BASE = '';
+  var PORTAL_URL = (CEPA_API_BASE || '') + '/portal/login';
+  var CEPITO_IMG = '<img src="/img/cepito-face.png" alt="Cepito" style="width:100%;height:100%;object-fit:cover;" />';
+
   /* ---- Data ---- */
   var TOPICS = [
     {
@@ -13,7 +22,7 @@
       items: [
         {
           q: '¿Cuál es el valor de la cuota?',
-          a: 'La cuota anual 2026 es de <strong>$50.000 por familia</strong>. Puede pagarse en hasta 3 cuotas precio contado vía Web Pay o por transferencia bancaria.',
+          a: 'La cuota anual 2026 es de <strong>$50.000 por familia</strong>. Puede pagarse en hasta 12 cuotas precio contado vía Web Pay o por transferencia bancaria.',
           keywords: ['valor','cuanto','precio','monto','50000','cuota']
         },
         {
@@ -141,6 +150,17 @@
   ];
 
   /* ---- Helpers ---- */
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = (s == null ? '' : String(s));
+    return d.innerHTML;
+  }
+  function aiToHtml(s) {
+    return escapeHtml(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+  }
+
   function normalize(str) {
     return (str || '')
       .toLowerCase()
@@ -201,7 +221,7 @@
       'aria-label': 'Abrir asistente CEPA',
       'aria-haspopup': 'dialog'
     });
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>';
+    btn.innerHTML = '<img src="/img/cepito-face.png" alt="Abrir chat con Cepito" />';
     btn.appendChild(badge);
 
     /* Panel */
@@ -216,7 +236,7 @@
     var closeBtn = el('button', { className: 'cepa-chat-close', 'aria-label': 'Cerrar chat' });
     closeBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg>';
     var header = el('div', { className: 'cepa-chat-header' });
-    header.innerHTML = '<div class="cepa-chat-header-left"><div class="cepa-chat-avatar">🎓</div><div class="cepa-chat-header-info"><strong>Asistente CEPA</strong><span>En línea ahora</span></div></div>';
+    header.innerHTML = '<div class="cepa-chat-header-left"><div class="cepa-chat-avatar">' + CEPITO_IMG + '</div><div class="cepa-chat-header-info"><strong>Asistente CEPA</strong><span>En línea ahora</span></div></div>';
     header.appendChild(closeBtn);
     panel.appendChild(header);
 
@@ -242,6 +262,7 @@
 
     /* ---- State ---- */
     var isOpen = false;
+    var aiHistory = []; // conversación para el asistente IA (scope 'publico')
 
     /* ---- Utilities ---- */
     function scrollBottom() {
@@ -251,7 +272,7 @@
     function appendMsg(type, html) {
       var row = el('div', { className: 'cepa-msg cepa-msg-' + type });
       if (type === 'bot') {
-        var icon = el('div', { className: 'cepa-msg-icon' }, ['🎓']);
+        var icon = el('div', { className: 'cepa-msg-icon', innerHTML: CEPITO_IMG });
         row.appendChild(icon);
       }
       var bubble = el('div', { className: 'cepa-bubble', innerHTML: html });
@@ -263,7 +284,7 @@
 
     function showTyping() {
       var row = el('div', { className: 'cepa-msg cepa-msg-bot cepa-typing' });
-      var icon = el('div', { className: 'cepa-msg-icon' }, ['🎓']);
+      var icon = el('div', { className: 'cepa-msg-icon', innerHTML: CEPITO_IMG });
       var dots = el('div', { className: 'cepa-typing-dots' });
       dots.innerHTML = '<span></span><span></span><span></span>';
       row.appendChild(icon);
@@ -295,7 +316,7 @@
       setChips([
         { label: '↩ Volver al menú', action: showMainMenu },
         { label: 'Pagar cuota', action: function () {
-          window.open('http://localhost:3001/portal/login', '_blank');
+          window.open(PORTAL_URL, '_blank');
         }}
       ]);
     }
@@ -332,19 +353,41 @@
 
     function handleFreeText(text) {
       if (!text.trim()) return;
-      appendMsg('user', text);
+      appendMsg('user', escapeHtml(text));
       inputEl.value = '';
       var found = findAnswer(text);
       if (found) {
         showAnswer(found);
       } else {
-        var typingRow = showTyping();
-        setTimeout(function () {
-          msgs.removeChild(typingRow);
-          appendMsg('bot', 'No encontré una respuesta exacta. Puedes escribirnos a <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a> o usar nuestro <a href="/contacto.html">formulario de contacto</a>.');
-          setChips([{ label: '↩ Volver al menú', action: showMainMenu }]);
-        }, 600);
+        askAI(text);
       }
+    }
+
+    /* Asistente IA (DeepSeek) para consultas de texto libre sin match. */
+    function askAI(text) {
+      aiHistory.push({ role: 'user', content: text });
+      var typingRow = showTyping();
+      fetch((CEPA_API_BASE || '') + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scope: 'publico', messages: aiHistory.slice(-10) })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (typingRow.parentNode) msgs.removeChild(typingRow);
+          if (data && data.ok && data.reply) {
+            aiHistory.push({ role: 'assistant', content: data.reply });
+            appendMsg('bot', aiToHtml(data.reply));
+          } else {
+            appendMsg('bot', 'No encontré una respuesta exacta. Escríbenos a <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a> o usa el <a href="/contacto.html">formulario de contacto</a>.');
+          }
+          setChips([{ label: '↩ Volver al menú', action: showMainMenu }]);
+        })
+        .catch(function () {
+          if (typingRow.parentNode) msgs.removeChild(typingRow);
+          appendMsg('bot', 'No me pude conectar en este momento. Escríbenos a <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a>.');
+          setChips([{ label: '↩ Volver al menú', action: showMainMenu }]);
+        });
     }
 
     /* ---- Events ---- */

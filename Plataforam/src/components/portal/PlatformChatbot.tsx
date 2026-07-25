@@ -60,17 +60,19 @@ const S = {
     bottom: '24px',
     right: '24px',
     zIndex: 9999,
-    width: '56px',
-    height: '56px',
+    width: '70px',
+    height: '70px',
     borderRadius: '50%',
-    background: '#185FA5',
+    background: 'linear-gradient(160deg,#2b6fbf,#185FA5)',
     color: '#fff',
-    border: 'none',
+    border: '3px solid #fff',
     cursor: 'pointer',
+    padding: 0,
+    overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 4px 20px rgba(24,95,165,.45), 0 2px 8px rgba(0,0,0,.18)',
+    boxShadow: '0 6px 24px rgba(24,95,165,.5), 0 2px 8px rgba(0,0,0,.2)',
     transition: 'transform .2s ease, box-shadow .2s ease',
     outline: 'none',
   },
@@ -79,8 +81,9 @@ const S = {
     bottom: '90px',
     right: '24px',
     zIndex: 9998,
-    width: '340px',
-    maxHeight: '520px',
+    width: '410px',
+    height: '620px',
+    maxHeight: 'calc(100vh - 140px)',
     background: '#fff',
     borderRadius: '20px',
     boxShadow: '0 16px 56px rgba(27,42,74,.22), 0 4px 16px rgba(27,42,74,.12)',
@@ -171,6 +174,7 @@ const S = {
     color: '#16202B',
     borderRadius: '0 14px 14px 14px',
     wordBreak: 'break-word' as const,
+    whiteSpace: 'pre-wrap' as const,
   },
   chipsWrap: {
     display: 'flex',
@@ -200,12 +204,22 @@ function renderAnswer(html: string) {
   );
 }
 
+/** Limpia marcadores markdown básicos para mostrar la respuesta de la IA como texto. */
+function toText(s: string): string {
+  return s.replace(/\*\*(.*?)\*\*/g, '$1').replace(/(?<!\*)\*(?!\*)(.*?)\*/g, '$1');
+}
+function stripHtml(s: string): string {
+  return s.replace(/<[^>]*>/g, '');
+}
+
 /* ---- Component ---- */
 export default function PlatformChatbot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<{ type: 'bot' | 'user'; text: string; isHtml?: boolean }[]>([]);
   const [showChips, setShowChips] = useState<'menu' | 'back' | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [input, setInput] = useState('');
+  const [sending, setSending] = useState(false);
   const msgsRef = useRef<HTMLDivElement>(null);
 
   /* Scroll to bottom whenever messages change */
@@ -213,7 +227,38 @@ export default function PlatformChatbot() {
     if (msgsRef.current) {
       msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
     }
-  }, [messages, showChips]);
+  }, [messages, showChips, sending]);
+
+  async function sendMessage() {
+    const q = input.trim();
+    if (!q || sending) return;
+    const next: { type: 'bot' | 'user'; text: string; isHtml?: boolean }[] = [
+      ...messages,
+      { type: 'user', text: q },
+    ];
+    setMessages(next);
+    setInput('');
+    setSending(true);
+    setShowChips(null);
+    const apiMessages = next
+      .filter((m) => m.type === 'user' || m.isHtml === false)
+      .map((m) => ({ role: m.type === 'user' ? 'user' : 'assistant', content: stripHtml(m.text) }));
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scope: 'portal', messages: apiMessages }),
+      });
+      const data = await res.json().catch(() => ({}));
+      const reply = data.ok ? toText(data.reply) : (data.error || 'No pude responder ahora.');
+      setMessages((prev) => [...prev, { type: 'bot', text: reply, isHtml: false }]);
+    } catch {
+      setMessages((prev) => [...prev, { type: 'bot', text: 'No me pude conectar. Intenta de nuevo.', isHtml: false }]);
+    } finally {
+      setSending(false);
+      setShowChips('back');
+    }
+  }
 
   function openPanel() {
     setOpen(true);
@@ -266,9 +311,8 @@ export default function PlatformChatbot() {
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         ) : (
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-          </svg>
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src="/img/cepito-face.png" alt="Abrir chat con Cepito" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         )}
       </button>
 
@@ -282,7 +326,7 @@ export default function PlatformChatbot() {
         {/* Header */}
         <div style={S.header}>
           <div style={S.headerLeft}>
-            <div style={S.avatar}>🎓</div>
+            <div style={S.avatar}><img src="/img/cepito-face.png" alt="Cepito" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
             <div style={S.headerInfo}>
               <strong style={{ fontSize: '14px', fontWeight: 700, lineHeight: 1.2 }}>
                 Asistente CEPA
@@ -301,12 +345,18 @@ export default function PlatformChatbot() {
         <div style={S.msgs} ref={msgsRef} aria-live="polite">
           {messages.map((msg, i) => (
             <div key={i} style={S.msgRow(msg.type === 'user')}>
-              {msg.type === 'bot' && <div style={S.icon}>🎓</div>}
-              <div style={S.bubbleBot}>
+              {msg.type === 'bot' && <div style={S.icon}><img src="/img/cepito-face.png" alt="Cepito" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>}
+              <div style={{ ...S.bubbleBot, ...(msg.type === 'user' ? { background: '#185FA5', color: '#fff', borderRadius: '14px 0 14px 14px' } : {}) }}>
                 {msg.isHtml ? renderAnswer(msg.text) : msg.text}
               </div>
             </div>
           ))}
+          {sending && (
+            <div style={S.msgRow(false)}>
+              <div style={S.icon}><img src="/img/cepito-face.png" alt="Cepito" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
+              <div style={{ ...S.bubbleBot, color: '#8a93a2' }}>escribiendo…</div>
+            </div>
+          )}
         </div>
 
         {/* Chips */}
@@ -350,6 +400,38 @@ export default function PlatformChatbot() {
             </button>
           </div>
         )}
+
+        {/* Input de texto libre (IA) */}
+        <form
+          onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
+          style={{ display: 'flex', gap: 6, padding: '10px 12px', borderTop: '1px solid #e8edf5', flexShrink: 0 }}
+        >
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Escribe tu pregunta…"
+            disabled={sending}
+            style={{
+              flex: 1, border: '1.5px solid #e3e6ec', borderRadius: 999,
+              padding: '9px 14px', fontSize: 13.5, fontFamily: 'var(--font-sans, Inter, system-ui, sans-serif)', outline: 'none',
+            }}
+          />
+          <button
+            type="submit"
+            disabled={sending || !input.trim()}
+            aria-label="Enviar"
+            style={{
+              width: 38, height: 38, borderRadius: '50%', flexShrink: 0, border: 'none',
+              background: '#185FA5', color: '#fff',
+              cursor: sending || !input.trim() ? 'default' : 'pointer', opacity: sending || !input.trim() ? 0.5 : 1,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+        </form>
       </div>
     </>
   );

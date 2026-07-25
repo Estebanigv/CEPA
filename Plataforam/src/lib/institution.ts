@@ -30,7 +30,7 @@ export const DEFAULT_REMINDER_EMAIL = {
   body: [
     'Estimada familia {familia}:',
     '',
-    'Te recordamos que tienes pendiente el pago de {concepto} por {monto}. Puedes pagarlo en línea con Web Pay (hasta 3 cuotas) desde la plataforma, por transferencia a la cuenta del CEPA, o directamente en la oficina.',
+    'Te recordamos que tienes pendiente el pago de {concepto} por {monto}. Puedes pagarlo en línea con Web Pay (hasta 12 cuotas) desde la plataforma, por transferencia a la cuenta del CEPA, o directamente en la oficina.',
     '',
     `Transferencias: ${INSTITUTION.bank.name} · ${INSTITUTION.bank.accountType} ${INSTITUTION.bank.accountNumber} · RUT ${INSTITUTION.rut} · ${INSTITUTION.email}`,
     '',

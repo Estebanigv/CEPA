@@ -6,6 +6,7 @@
  */
 import { redirect } from 'next/navigation';
 import { getPortalFamilyId } from '@/lib/portal-auth';
+import { isAdminAuthed } from '@/lib/server-auth';
 import { getFamilyById } from '@/lib/portal-server-data';
 import { LogoutButton } from '@/components/portal/LogoutButton';
 
@@ -31,20 +32,28 @@ function CuotaCard({ label, paid, folio }: { label: string; paid: boolean; folio
   );
 }
 
-export default async function MisDatosPage() {
-  const fid = getPortalFamilyId();
+export default async function MisDatosPage({ searchParams }: { searchParams?: { fid?: string } }) {
+  // Modo preview: un admin autenticado puede ver la ficha de cualquier familia con ?fid=
+  const previewFid = searchParams?.fid;
+  const isPreview = Boolean(previewFid) && isAdminAuthed();
+  const fid = isPreview ? previewFid! : getPortalFamilyId();
   if (!fid) redirect('/portal/login');
   const fam = await getFamilyById(fid);
-  if (!fam) redirect('/portal/login');
+  if (!fam) redirect(isPreview ? '/admin' : '/portal/login');
 
   const years = Object.keys(fam.historial).sort((a, b) => Number(b) - Number(a));
   const pendientes = [
-    !fam.cepa2026 ? 'Cuota Centro de Padres (CEPA) 2026' : null,
-    !fam.seguro2026 ? 'Seguro Escolar 2026' : null,
+    !fam.cepa2026 ? 'Cuota Centro de Padres (CEPA) 2026 — $50.000' : null,
+    !fam.seguro2026 ? 'Beca de Fallecimiento 2026 — $30.000' : null,
   ].filter(Boolean) as string[];
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg-soft)' }}>
+      {isPreview && (
+        <div style={{ background: '#E0A72E', color: '#3a2a00', padding: '8px 16px', fontSize: 13, textAlign: 'center', fontWeight: 600 }}>
+          👁️ Vista previa (admin) — así ve esta familia su portal. <a href="/admin" style={{ color: '#3a2a00', textDecoration: 'underline' }}>Volver al panel</a>
+        </div>
+      )}
       {/* Header simple */}
       <header
         style={{
@@ -57,13 +66,17 @@ export default async function MisDatosPage() {
           <div style={{ fontSize: 18, fontWeight: 700 }}>{fam.apoderado}</div>
           <div style={{ fontSize: 12.5, opacity: .8 }}>Familia {fam.name}{fam.cursos ? ` · ${fam.cursos}` : ''}</div>
         </div>
-        <LogoutButton
-          style={{
-            background: 'rgba(255,255,255,.14)', border: '1px solid rgba(255,255,255,.25)',
-            color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 13, cursor: 'pointer',
-            fontFamily: 'inherit',
-          }}
-        />
+        {isPreview ? (
+          <a href="/admin" style={{ background: 'rgba(255,255,255,.14)', border: '1px solid rgba(255,255,255,.25)', color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 13, textDecoration: 'none' }}>← Panel</a>
+        ) : (
+          <LogoutButton
+            style={{
+              background: 'rgba(255,255,255,.14)', border: '1px solid rgba(255,255,255,.25)',
+              color: '#fff', borderRadius: 10, padding: '8px 14px', fontSize: 13, cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          />
+        )}
       </header>
 
       <main style={{ maxWidth: 860, margin: '0 auto', padding: '28px 24px 48px' }}>
@@ -75,7 +88,7 @@ export default async function MisDatosPage() {
         {/* Estado cuotas 2026 */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: 14, marginBottom: 20 }}>
           <CuotaCard label="Cuota CEPA" paid={fam.cepa2026} folio={fam.cepaFolio2026} />
-          <CuotaCard label="Seguro Escolar" paid={fam.seguro2026} folio={fam.seguroFolio2026} />
+          <CuotaCard label="Beca de Fallecimiento" paid={fam.seguro2026} folio={fam.seguroFolio2026} />
         </div>
 
         {/* Pendientes */}
@@ -121,14 +134,14 @@ export default async function MisDatosPage() {
 
         {/* Historial anual */}
         <div className="card" style={{ padding: '18px 20px' }}>
-          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Historial anual (CEPA / Seguro)</div>
+          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12 }}>Historial anual (CEPA / Beca)</div>
           {years.length ? (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13.5 }}>
               <thead>
                 <tr style={{ color: 'var(--color-muted)', fontSize: 12 }}>
                   <th style={{ textAlign: 'left', padding: '4px 0' }}>Año</th>
                   <th style={{ textAlign: 'center', padding: '4px 0' }}>CEPA</th>
-                  <th style={{ textAlign: 'center', padding: '4px 0' }}>Seguro</th>
+                  <th style={{ textAlign: 'center', padding: '4px 0' }}>Beca</th>
                 </tr>
               </thead>
               <tbody>

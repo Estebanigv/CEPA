@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Formulario de Beca · CEPA Compañía de María Apoquindo</title>
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="description" content="Formulario de postulación a las Becas Solidarias del Centro de Padres y Apoderados del Colegio Compañía de María Apoquindo." />
+<meta name="robots" content="noindex, follow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/cepa.css" />
+<link rel="stylesheet" href="assets/chatbot.css" />
+<style>
+  .fb-hero { background:linear-gradient(165deg,#22355c,#1B2A4A 55%,#131e36); color:#fff; padding:clamp(2.4rem,6vw,4rem) 0 clamp(1.6rem,4vw,2.6rem); text-align:center; }
+  .fb-hero h1 { color:#fff; font-size:clamp(1.8rem,4.5vw,2.6rem); margin-bottom:.4rem; }
+  .fb-hero p { color:#c9d4e8; max-width:56ch; margin:0 auto; font-size:1.02rem; }
+  .fb-card { background:#fff; border:1px solid #e3e6ec; border-radius:16px; box-shadow:0 4px 20px rgba(27,42,74,.08); padding:clamp(1.4rem,3vw,2.2rem); }
+  .fb-sec { font-family:"Fraunces",serif; font-size:1.15rem; color:#1B2A4A; font-weight:600; margin:1.6rem 0 .4rem; padding-top:1.2rem; border-top:1px solid #eef1f6; }
+  .fb-sec:first-of-type { border-top:none; padding-top:0; margin-top:.4rem; }
+  .fb-row { margin-bottom:1rem; }
+  .fb-row label { display:block; font-size:.9rem; font-weight:600; color:#1B2A4A; margin-bottom:.35rem; }
+  .fb-row .hint { font-weight:400; color:#8a93a2; font-size:.82rem; }
+  .fb-row .req { color:#e53935; }
+  .fb-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px){ .fb-grid2 { grid-template-columns:1fr; } }
+  .fb-input, .fb-select, .fb-textarea {
+    width:100%; padding:10px 14px; border:1.5px solid #e3e6ec; border-radius:10px;
+    font-size:.97rem; font-family:"Inter",system-ui,sans-serif; color:#1c1f26; background:#fff;
+    outline:none; box-sizing:border-box; transition:border-color .15s, box-shadow .15s;
+  }
+  .fb-textarea { min-height:90px; resize:vertical; }
+  .fb-input:focus, .fb-select:focus, .fb-textarea:focus { border-color:#185FA5; box-shadow:0 0 0 3px rgba(24,95,165,.12); }
+  .fb-file { font-size:.9rem; }
+  .fb-check { display:flex; gap:10px; align-items:flex-start; margin-top:1.2rem; font-size:.92rem; color:#1B2A4A; }
+  .fb-check input { margin-top:3px; }
+  .fb-submit { width:100%; margin-top:1.5rem; padding:14px; border:none; border-radius:12px; background:#1E7A52; color:#fff; font-size:1.02rem; font-weight:700; font-family:inherit; cursor:pointer; transition:opacity .15s, transform .1s; }
+  .fb-submit:hover:not(:disabled){ opacity:.92; transform:translateY(-1px); }
+  .fb-submit:disabled { opacity:.6; cursor:not-allowed; }
+  .fb-msg { display:none; padding:12px 15px; border-radius:10px; font-size:.92rem; margin-top:1rem; }
+  .fb-msg.err { display:block; background:#fff0f0; border:1px solid #fbd0cd; color:#b3261e; }
+  .fb-ok { display:none; text-align:center; padding:2.5rem 1rem; }
+  .fb-ok .ic { width:64px; height:64px; border-radius:50%; background:#e3f1ea; color:#1E7A52; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; }
+  .fb-ok h2 { color:#1E7A52; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Saltar al contenido</a>
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="brand" aria-label="Inicio — CEPA">
+      <span class="brand__crest"><img src="assets/logo.png" width="46" height="46" decoding="async" alt="Escudo Compañía de María Apoquindo" /></span>
+      <span class="brand__txt"><span class="brand__name">CEPA</span><span class="brand__sub">Compañía de María Apoquindo</span></span>
+    </a>
+    <nav class="nav__menu" aria-label="Principal">
+      <a href="becas-solidarias.html" class="nav__link">Becas</a>
+      <a href="contacto.html" class="nav__link">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<section class="fb-hero">
+  <div class="container">
+    <h1>Formulario de Beca</h1>
+    <p>Completa esta solicitud para postular a las Becas Solidarias del CEPA. La información es confidencial y la analiza el Director de Acción Social.</p>
+  </div>
+</section>
+
+<main id="main" class="section">
+  <div class="container" style="max-width:760px;">
+    <div class="fb-card">
+      <form id="beca-form" novalidate>
+        <div class="fb-ok" id="fb-ok">
+          <div class="ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h2>¡Postulación enviada!</h2>
+          <p style="color:#5b6472;">Recibimos tu solicitud. Enviamos una copia a tu correo y al Centro de Padres. Te contactaremos por este medio.</p>
+        </div>
+
+        <div id="fb-fields">
+          <div class="fb-sec">Tipo de beca</div>
+          <div class="fb-row">
+            <label>Indica a qué beca postulas <span class="req">*</span></label>
+            <select class="fb-select" name="tipo_beca" required>
+              <option value="">Selecciona una…</option>
+              <option>Transporte</option>
+              <option>Almuerzo (Club Z)</option>
+              <option>Canasta Familiar</option>
+              <option>Útiles Escolares</option>
+            </select>
+          </div>
+
+          <div class="fb-sec">Datos del solicitante</div>
+          <div class="fb-grid2">
+            <div class="fb-row"><label>Nombre del solicitante <span class="req">*</span></label><input class="fb-input" name="nombre_solicitante" required /></div>
+            <div class="fb-row"><label>RUT del solicitante</label><input class="fb-input" name="rut_solicitante" placeholder="12.345.678-9" /></div>
+          </div>
+          <div class="fb-grid2">
+            <div class="fb-row"><label>Tu correo electrónico <span class="req">*</span></label><input class="fb-input" type="email" name="email" required placeholder="correo@ejemplo.cl" /></div>
+            <div class="fb-row"><label>Comuna</label><input class="fb-input" name="comuna" /></div>
+          </div>
+          <div class="fb-row"><label>Dirección</label><input class="fb-input" name="direccion" /></div>
+
+          <div class="fb-sec">Datos de la familia</div>
+          <div class="fb-row"><label>Familia para la cual solicita beca <span class="hint">(apellidos)</span></label><input class="fb-input" name="apellidos_familia" /></div>
+          <div class="fb-grid2">
+            <div class="fb-row"><label>Año de ingreso al colegio</label><input class="fb-input" type="number" name="ano_ingreso" min="1990" max="2026" /></div>
+            <div class="fb-row"><label>N° de hijos en el colegio</label><input class="fb-input" type="number" name="num_hijos" min="1" max="15" /></div>
+          </div>
+          <div class="fb-row"><label>¿En qué cursos están actualmente?</label><input class="fb-input" name="cursos" placeholder="Ej. 3° Básico A, I Medio B" /></div>
+          <div class="fb-row"><label>Nombre de los estudiantes para los que solicita el beneficio</label><input class="fb-input" name="estudiantes" /></div>
+
+          <div class="fb-sec">Situación económica</div>
+          <div class="fb-row"><label>Describa la situación por la que solicita beca</label><textarea class="fb-textarea" name="descripcion"></textarea></div>
+          <div class="fb-row"><label>Si postula a Transporte, ¿qué transporte necesita?</label><input class="fb-input" name="transporte_detalle" /></div>
+          <div class="fb-row"><label>Si postula a Almuerzo, ¿qué días necesita?</label><input class="fb-input" name="almuerzo_dias" /></div>
+          <div class="fb-row"><label>¿Quiénes aportan al ingreso familiar?</label><input class="fb-input" name="aportantes" /></div>
+
+          <div class="fb-sec">Datos del padre</div>
+          <div class="fb-grid2">
+            <div class="fb-row"><label>Profesión del padre</label><input class="fb-input" name="profesion_padre" /></div>
+            <div class="fb-row"><label>Ingreso bruto mensual</label><input class="fb-input" name="ingreso_padre" placeholder="$" /></div>
+          </div>
+          <div class="fb-row"><label>Estado laboral actual <span class="hint">(dependiente, independiente, jubilado, cesante…)</span></label><input class="fb-input" name="estado_laboral_padre" /></div>
+          <div class="fb-row"><label>Si se encuentra cesante, suba su finiquito <span class="hint">(PDF/imagen)</span></label><input class="fb-file" type="file" name="finiquito_padre" accept=".pdf,.jpg,.jpeg,.png" /></div>
+
+          <div class="fb-sec">Datos de la madre</div>
+          <div class="fb-grid2">
+            <div class="fb-row"><label>Profesión de la madre</label><input class="fb-input" name="profesion_madre" /></div>
+            <div class="fb-row"><label>Ingreso bruto mensual</label><input class="fb-input" name="ingreso_madre" placeholder="$" /></div>
+          </div>
+          <div class="fb-row"><label>Estado laboral actual <span class="hint">(dependiente, independiente, jubilada, cesante…)</span></label><input class="fb-input" name="estado_laboral_madre" /></div>
+          <div class="fb-row"><label>Si se encuentra cesante, suba su finiquito <span class="hint">(PDF/imagen)</span></label><input class="fb-file" type="file" name="finiquito_madre" accept=".pdf,.jpg,.jpeg,.png" /></div>
+
+          <div class="fb-sec">Vivienda</div>
+          <div class="fb-row"><label>¿En qué situación está su vivienda? <span class="hint">(propia sin dividendo, propia con dividendo, arrendada, vive con familiares…)</span></label><input class="fb-input" name="situacion_vivienda" /></div>
+          <div class="fb-row"><label>Si es arrendada o con dividendo, indique el monto</label><input class="fb-input" name="monto_arriendo" placeholder="$" /></div>
+
+          <label class="fb-check">
+            <input type="checkbox" name="certifico" value="si" required />
+            <span>Certifico que la información entregada en este documento es veraz, y acepto las condiciones del reglamento de becas del Centro de Padres. <span class="req">*</span></span>
+          </label>
+
+          <div class="fb-msg err" id="fb-err"></div>
+          <button class="fb-submit" type="submit" id="fb-btn">Enviar postulación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script src="assets/cepa.js"></script>
+<script>
+(function () {
+  var form = document.getElementById('beca-form');
+  var btn = document.getElementById('fb-btn');
+  var err = document.getElementById('fb-err');
+  var fields = document.getElementById('fb-fields');
+  var ok = document.getElementById('fb-ok');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.style.display = 'none';
+    var nombre = form.nombre_solicitante.value.trim();
+    var email = form.email.value.trim();
+    var tipo = form.tipo_beca.value;
+    if (!tipo) { showErr('Selecciona el tipo de beca.'); return; }
+    if (!nombre) { showErr('Ingresa tu nombre.'); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showErr('Ingresa un correo válido.'); return; }
+    if (!form.certifico.checked) { showErr('Debes aceptar la declaración de veracidad.'); return; }
+    btn.disabled = true; btn.textContent = 'Enviando…';
+    fetch('/api/beca', { method: 'POST', body: new FormData(form) })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (res.ok && res.d.ok) { fields.style.display = 'none'; ok.style.display = 'block'; window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        else { showErr(res.d.error || 'No se pudo enviar. Intenta de nuevo.'); btn.disabled = false; btn.textContent = 'Enviar postulación'; }
+      })
+      .catch(function () { showErr('No se pudo conectar. Intenta de nuevo.'); btn.disabled = false; btn.textContent = 'Enviar postulación'; });
+  });
+  function showErr(m) { err.textContent = m; err.style.display = 'block'; }
+})();
+</script>
+</body>
+</html>

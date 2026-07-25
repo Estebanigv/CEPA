@@ -6,8 +6,19 @@ import { DEFAULT_REMINDER_EMAIL } from '@/lib/institution';
 
 type RuleKey = 'before' | 'due' | 'after';
 
+/** Reemplaza las variables de la plantilla con valores de ejemplo. */
+function fillVars(text: string): string {
+  return text
+    .replace(/\{familia\}/g, 'Pérez González')
+    .replace(/\{monto\}/g, '$50.000')
+    .replace(/\{concepto\}/g, 'Cuota Centro de Padres 2026');
+}
+
 export function Cobranza({ onToast }: { onToast: (msg: string) => void }) {
   const [rules, setRules] = useState<Record<RuleKey, boolean>>({ before: true, due: true, after: true });
+  const [subject, setSubject] = useState(DEFAULT_REMINDER_EMAIL.subject);
+  const [body, setBody] = useState(DEFAULT_REMINDER_EMAIL.body);
+  const [preview, setPreview] = useState(false);
   const log = [
     { to: 'Familias morosas · Cuota CEPA', n: 14, date: '07 jun 2026 · 09:00', type: 'Masivo' },
     { to: 'Familia Maldonado P.', n: 1, date: '06 jun 2026 · 16:20', type: 'Manual' },
@@ -58,15 +69,16 @@ export function Cobranza({ onToast }: { onToast: (msg: string) => void }) {
           </div>
           <div className="card-pad" style={{ paddingTop: 16 }}>
             <label className="field-l">Asunto</label>
-            <input className="input" defaultValue={DEFAULT_REMINDER_EMAIL.subject} style={{ marginBottom: 14 }} />
+            <input className="input" value={subject} onChange={(e) => setSubject(e.target.value)} style={{ marginBottom: 14 }} />
             <label className="field-l">Mensaje</label>
             <textarea
               className="input"
               style={{ height: 170, resize: 'vertical', paddingTop: 11 }}
-              defaultValue={DEFAULT_REMINDER_EMAIL.body}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
             ></textarea>
             <div className="row-between" style={{ marginTop: 16 }}>
-              <button className="btn btn--ghost">
+              <button className="btn btn--ghost" onClick={() => setPreview(true)}>
                 <Icon name="eye" size={16} /> Previsualizar
               </button>
               <button className="btn btn--primary" onClick={() => onToast('Plantilla guardada')}>
@@ -104,6 +116,34 @@ export function Cobranza({ onToast }: { onToast: (msg: string) => void }) {
           ))}
         </div>
       </div>
+
+      {preview && (
+        <div className="modal-wrap">
+          <div className="scrim" onClick={() => setPreview(false)}></div>
+          <div className="modal">
+            <div className="modal-h">
+              <h3 style={{ fontSize: 18 }}>Vista previa del correo</h3>
+              <p className="muted" style={{ fontSize: 13.5, marginTop: 6 }}>
+                Ejemplo con variables reemplazadas (familia, monto, concepto).
+              </p>
+            </div>
+            <div className="modal-b">
+              <div style={{ border: '1px solid var(--color-line)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+                <div style={{ background: 'var(--color-bg-soft)', padding: '12px 16px', borderBottom: '1px solid var(--color-line)' }}>
+                  <div className="muted" style={{ fontSize: 12 }}>Asunto</div>
+                  <div style={{ fontWeight: 600, fontSize: 14.5, marginTop: 2 }}>{fillVars(subject)}</div>
+                </div>
+                <div style={{ padding: '16px', fontSize: 14, lineHeight: 1.55, whiteSpace: 'pre-wrap', color: 'var(--color-ink)' }}>
+                  {fillVars(body)}
+                </div>
+              </div>
+            </div>
+            <div className="modal-f">
+              <button className="btn btn--primary" onClick={() => setPreview(false)}>Cerrar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

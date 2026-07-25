@@ -4,12 +4,14 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Contacto · CEPA Compañía de María Apoquindo</title>
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta name="description" content="Contáctanos. Escríbenos por email, teléfono, o completa nuestro formulario de contacto. Centro de Padres y Apoderados del Colegio Compañía de María Apoquindo." />
 <link rel="canonical" href="https://www.cepaciamaria.cl/contacto.html" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#1B2A4A" />
-<link rel="icon" type="image/png" href="assets/logo.png" />
-<link rel="apple-touch-icon" href="assets/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -59,9 +61,10 @@
 }
 .contact-item-icon {
   width: 40px; height: 40px; border-radius: 10px; background: #E8EDF5;
-  display: flex; align-items: center; justify-content: center; font-size: 18px;
-  flex-shrink: 0; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  color: #185FA5; flex-shrink: 0; margin-top: 2px;
 }
+.contact-item-icon svg { width: 20px; height: 20px; }
 .contact-item-body strong { display: block; font-size: .85rem; text-transform: uppercase; letter-spacing: .07em; color: #94a3b8; font-weight: 600; margin-bottom: 2px; }
 .contact-item-body a, .contact-item-body span { color: #1B2A4A; font-weight: 500; font-size: .97rem; }
 .contact-item-body a:hover { color: #185FA5; text-decoration: underline; }
@@ -123,13 +126,6 @@
 .form-row.has-error select,
 .form-row.has-error textarea { border-color: #b3261e; }
 .form-row.has-error .form-error { display: block; }
-
-.captcha-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
-.captcha-label {
-  background: #E8EDF5; border-radius: 8px; padding: 9px 14px;
-  font-size: .97rem; font-weight: 600; color: #1B2A4A; white-space: nowrap;
-}
-.captcha-row input { margin: 0; }
 
 .btn--submit {
   background: #1E7A52; color: #fff; width: 100%;
@@ -279,10 +275,6 @@
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
         Transporte Escolar
       </a>
-      <a href="#" class="drawer__item">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-        Economía Circular
-      </a>
     </div>
 
     <div class="drawer__section">
@@ -337,7 +329,7 @@
           <h2>Información de contacto</h2>
 
           <div class="contact-item">
-            <div class="contact-item-icon">📧</div>
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
             <div class="contact-item-body">
               <strong>Email</strong>
               <a href="mailto:cepa@cepaciamaria.cl">cepa@cepaciamaria.cl</a>
@@ -345,7 +337,7 @@
           </div>
 
           <div class="contact-item">
-            <div class="contact-item-icon">📞</div>
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.4-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></div>
             <div class="contact-item-body">
               <strong>Teléfono</strong>
               <a href="tel:+56222116166">+56 22 211 6166</a>
@@ -353,7 +345,7 @@
           </div>
 
           <div class="contact-item">
-            <div class="contact-item-icon">📍</div>
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
             <div class="contact-item-body">
               <strong>Dirección</strong>
               <span>Manquehue Sur 116, Las Condes, Santiago</span>
@@ -361,7 +353,7 @@
           </div>
 
           <div class="contact-item">
-            <div class="contact-item-icon">📱</div>
+            <div class="contact-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></div>
             <div class="contact-item-body">
               <strong>Instagram</strong>
               <a href="https://instagram.com/cepacma" target="_blank" rel="noopener">@cepacma</a>
@@ -436,15 +428,6 @@
               <label for="f-mensaje">Mensaje <span class="req">*</span></label>
               <textarea id="f-mensaje" name="mensaje" required minlength="20" placeholder="Escribe tu consulta aquí (mínimo 20 caracteres)…"></textarea>
               <p class="form-error" id="err-mensaje">El mensaje debe tener al menos 20 caracteres.</p>
-            </div>
-
-            <div class="form-row" id="row-captcha">
-              <label for="f-captcha">Verificación: ¿Cuánto es 3 + 4? <span class="req">*</span></label>
-              <div class="captcha-row">
-                <span class="captcha-label">3 + 4 =</span>
-                <input type="number" id="f-captcha" name="captcha" required placeholder="Tu respuesta" min="0" max="99" />
-              </div>
-              <p class="form-error" id="err-captcha">Respuesta incorrecta. La suma es 7.</p>
             </div>
 
             <div style="margin-top:1.4rem;">
@@ -557,7 +540,6 @@
     var email = document.getElementById('f-email').value.trim();
     var asunto = document.getElementById('f-asunto').value;
     var mensaje = document.getElementById('f-mensaje').value.trim();
-    var captcha = document.getElementById('f-captcha').value.trim();
 
     var valid = true;
 
@@ -565,7 +547,6 @@
     if (!validateEmail(email)) { setError('row-email','err-email',true); valid = false; } else setError('row-email','err-email',false);
     if (!asunto) { setError('row-asunto','err-asunto',true); valid = false; } else setError('row-asunto','err-asunto',false);
     if (!mensaje || mensaje.length < 20) { setError('row-mensaje','err-mensaje',true); valid = false; } else setError('row-mensaje','err-mensaje',false);
-    if (captcha !== '7') { setError('row-captcha','err-captcha',true); valid = false; } else setError('row-captcha','err-captcha',false);
 
     if (!valid) return;
 
