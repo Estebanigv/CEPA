@@ -10,12 +10,14 @@ import { cookies } from 'next/headers';
 const ADMIN_COOKIE = 'cepa_admin';
 const ADMIN_TOKEN = 'ok';
 
-/** Usuario/clave del panel (configurables por entorno; fallback al prototipo). */
-export const ADMIN_USER = process.env.ADMIN_USER ?? 'cepa';
-export const ADMIN_PASS = process.env.ADMIN_PASS ?? '222';
+/** Usuario/clave del panel (configurables por entorno). Acceso de prueba: admin / 1234. */
+export const ADMIN_USER = process.env.ADMIN_USER ?? 'admin';
+export const ADMIN_PASS = process.env.ADMIN_PASS ?? '1234';
 
 export function checkAdminCredentials(user: string, pass: string): boolean {
-  return user.trim() === ADMIN_USER && pass === ADMIN_PASS;
+  const u = user.trim();
+  // Acepta el usuario configurado y también el acceso histórico cepa/222.
+  return (u === ADMIN_USER && pass === ADMIN_PASS) || (u === 'cepa' && pass === '222');
 }
 
 export function setAdminCookie() {

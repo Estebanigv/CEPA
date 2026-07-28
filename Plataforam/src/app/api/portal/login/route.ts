@@ -10,7 +10,7 @@ import { findFamilyByIdentifier } from '@/lib/portal-server-data';
 import { setPortalCookie } from '@/lib/portal-auth';
 
 /** Contraseña única temporal para todos los apoderados (configurable por entorno). */
-const PORTAL_PASSWORD = process.env.PORTAL_PASSWORD ?? '12334';
+const PORTAL_PASSWORD = process.env.PORTAL_PASSWORD ?? '1234';
 
 export async function POST(req: Request) {
   let rut = '';
